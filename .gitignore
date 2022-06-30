@@ -25,3 +25,7 @@ yarn-error.log*
 
 # venv
 /venv
+
+# python 관련
+/.idea
+/__pycache__

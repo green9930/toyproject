@@ -43,8 +43,19 @@
       <h2>TODOLIST</h2>
     </div>
     <!-- QUOTE ----------------------------------------------------------------- -->
-    <div>
-      <h2>QUOTE</h2>
+    <div class="wrap">
+
+        <span id="quote" class="quote"></span>
+
+        <span id="buttons" class="buttons">
+            <input onclick="count('plus')" id="like_button" type="button" class="btn btn-outline-primary" value="Like 👍">
+            <input onclick="count('minus')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">
+        </span>
+
+        <div class="like_number" id="like_number">  </div>
+        <div class="dislike_number" id="dislike_number">  </div>
+
     </div>
+
   </body>
 </html>

@@ -29,7 +29,20 @@ def home():
 
 
 # QUOTE ---------------------------------------------------------------------- #
+@app.route("/quote", methods=["GET"])
+def quote_get():
+    quote_list = list(db.quote.find({}, {'_id': False}))
+    print(quote_list)
+    return jsonify({'quotes': quote_list})
 
+@app.route("/quote", methods=["POST"])
+def quote_post():
+    like_receive = request.form['like_give']
+    dislike_receive = request.form['dislike_give']
+    written_receive = request.form['written_give']
+
+    db.quote.update_one({'quote': written_receive}, {'$set': {'like': like_receive, 'dislike': dislike_receive}})
+    return jsonify({'msg': 'MongoDB Update 완료 ❕'})
 
 # DB TEST -------------------------------------------------------------------- #
 @app.route('/dbtest', methods=['POST'])
