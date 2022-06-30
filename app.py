@@ -15,9 +15,10 @@ ca = certifi.where()
 client = MongoClient(MONGODB_URL, tlsCAFile=ca)
 db = client.toyprojectdb
 
+
 @app.route('/')
 def home():
-  return render_template('index.html')
+    return render_template('index.html')
 
 # BACKGROUND ----------------------------------------------------------------- #
 
@@ -47,14 +48,14 @@ def quote_post():
 # DB TEST -------------------------------------------------------------------- #
 @app.route('/dbtest', methods=['POST'])
 def dbtest_post():
-  text_receive = request.form['text_give']
+    text_receive = request.form['text_give']
 
-  doc = {
-    'text': text_receive,
-  }
-  db.testdb.insert_one(doc)
-  return jsonify({'msg': 'MONGODB TEST SUCCESS'})
+    doc = {
+        'text': text_receive,
+    }
+    db.testdb.insert_one(doc)
+    return jsonify({'msg': 'MONGODB TEST SUCCESS'})
 
 
 if __name__ == '__main__':
-  app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)

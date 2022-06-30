@@ -31,16 +31,115 @@
     <h2>BACKGROUND</h2>
     <h1 class="a11y-hidden">Momentum</h1>
     <!-- WEATHER --------------------------------------------------------------- -->
-    <div>
-      <h2>WEATHER</h2>
+    <div class="weather">
+      <span class="weather01">ㅇㅇ</span>
+      <span class="weather02">ㅇㅇ</span>
+      <span class="weather03">ㅇㅇ</span>
     </div>
     <!-- CLOCK ----------------------------------------------------------------- -->
-    <div>
-      <h2>CLOCK</h2>
-    </div>
+    <h2>CLOCK</h2>
+    <h3 class="clock">00:00</h3>
     <!-- TODOLIST -------------------------------------------------------------- -->
-    <div>
+    <!-- TODO POPUP ------------------------------------------------------------ -->
+    <div class="todo-pop">
+      <div class="todo-pop-container">
+        <div class="todo-content-box">
+          <div class="todo-content-list">
+            <ul>
+              <li>
+                <input type="checkbox" class="" />
+                <span class="todo-done">눕기</span>
+                <button>delete</button>
+                <button disabled>edit</button>
+              </li>
+              <li>
+                <input type="checkbox" class="" checked />
+                <span>러닝</span>
+                <button>delete</button>
+                <button>edit</button>
+              </li>
+              <li>
+                <input type="checkbox" class="" />
+                <span class="todo-done">고기먹기</span>
+                <button>delete</button>
+                <button disabled>edit</button>
+              </li>
+              <li>
+                <input type="checkbox" class="" checked />
+                <span>번지점프</span>
+                <button>delete</button>
+                <button>edit</button>
+              </li>
+              <li>
+                <input type="checkbox" class="" />
+                <span class="todo-done">마라톤</span>
+                <button>delete</button>
+                <button disabled>edit</button>
+              </li>
+              <li>
+                <input type="checkbox" class="" checked />
+                <span>다이빙</span>
+                <button>delete</button>
+                <button>edit</button>
+              </li>
+            </ul>
+          </div>
+          <div class="todo-editor">
+            <label for="edit-input">todo editor</label>
+            <input
+              type="text"
+              id="edit-input"
+              maxlength="30"
+              required
+              placeholder=""
+            />
+            <button class="modify-btn">edit</button>
+            <!-- 수정/삭제 목적 글번호 넣는 input -->
+            <input type="hidden" class="modify-num" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TODO INPUT ------------------------------------------------------------ -->
+    <div class="todo-wrap">
       <h2>TODOLIST</h2>
+      <div class="todo-main">
+        <section class="todo-section01">
+          <div class="todo-input-container">
+            <div class="todo-input-box">
+              <div class="todo-div">
+                <label for="add-input"
+                  >What is your main focus for today?</label
+                >
+                <input
+                  type="text"
+                  id="add-input"
+                  class="todo-input"
+                  maxlength="30"
+                  placeholder="Enter Your To-do"
+                />
+                <button class="todo-enter">Enter</button>
+                <div class="alert-box">
+                  <!-- TODO 10개 이상 들어가면 경고 메시지 -->
+                  <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="todo-section02">
+          <div class="todo-list-box">
+            <ul class="todo-list-ul">
+              <li><a href="#" class="todo-done todo-list-a">눕기</a></li>
+              <li><a href="#" class="todo-list-a">러닝</a></li>
+              <li><a href="#" class="todo-done todo-list-a">고기먹기</a></li>
+              <li><a href="#" class="todo-list-a">번지점프</a></li>
+              <li><a href="#" class="todo-done todo-list-a">마라톤</a></li>
+              <li><a href="#" class="todo-list-a">다이빙</a></li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
     <!-- QUOTE ----------------------------------------------------------------- -->
     <div class="wrap">
