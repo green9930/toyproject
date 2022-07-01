@@ -1,0 +1,25 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.quote {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.buttons {
+  margin-left: 15px;
+}
+
+.buttons > button {
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 700px;
+}
