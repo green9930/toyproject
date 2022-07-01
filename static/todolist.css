@@ -82,3 +82,7 @@
 .todo-pop .todo-pop-container .todo-content-box .todo-editor label {
   margin-right: 15px;
 }
+
+.todo-done {
+  text-decoration: line-through;
+}

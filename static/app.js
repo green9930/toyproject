@@ -11,6 +11,8 @@ $(document).ready(() => {
   backgroundInit();
   // 위치정보 호출
   geoStart();
+  // TODOLIST 호출
+  getTodo(true);
 });
 
 /* BACKGROUND --------------------------------------------------------------- */
@@ -36,11 +38,12 @@ function backgroundInit() {
 }
 
 /* WEATHER ------------------------------------------------------------------ */
-function onGeoSuccess(position){
+function onGeoSuccess(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
-  const API_KEY = "5cedb12d7cfe681080f2af92fcdf062c";
+  const API_KEY = '5cedb12d7cfe681080f2af92fcdf062c';
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+
   $.ajax({
     type: 'GET',
     url: url,
@@ -55,12 +58,15 @@ function onGeoSuccess(position){
     },
   });
 }
-function onGeoError(){
-  alert("위치 정보를 받을 수 없습니다.")
+
+function onGeoError() {
+  alert('위치 정보를 받을 수 없습니다.');
 }
-function geoStart(){
-navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+
+function geoStart() {
+  navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
 }
+
 /* CLOCK -------------------------------------------------------------------- */
 // 우선 html에서 Element를 자바스크립트로 가져온다.
 const clock = document.querySelector('.clock'); // class는 .을 찍어야한다.
@@ -76,40 +82,275 @@ getClock();
 setInterval(getClock, 1000);
 
 /* TODOLIST ----------------------------------------------------------------- */
+const $todoInput = document.querySelector('.todo-input');
+const $todoAddBtn = document.querySelector('.todo-enter');
+
 /* TODO POPUP --------------------------------------------------------------- */
 // 팝업열기
-$('.todo-list-a').on('click', function (e) {
+// $(document).on('click','클래스이름/아이디이름',function(){})
+$(document).on('click', '.todo-list-a', function (e) {
   e.preventDefault();
-  if ($(this).is('.todo-done')) {
+  const targetTimestamp = e.currentTarget.nextElementSibling.innerText;
+  const targetText = e.target.innerText;
+  // e.target.classList = object
+  const arr = [...e.target.classList];
+  const isTodoDone = arr.includes('todo-done');
+  console.log(targetTimestamp);
+  console.log(targetText);
+  console.log(isTodoDone);
+
+  if (isTodoDone) {
+    $('#edit-input').attr('disabled', true);
+    $('.modify-btn').attr('disabled', true);
     $('#edit-input').attr('placeholder', '');
-    $('.modify-num').val('');
+  } else {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetText);
+    $('.modify-btn').on('click', () => handleEditTodo(targetTimestamp));
   }
+
   $('.todo-pop').css('visibility', 'visible');
-  modifyResultTF = false;
+
+  getTodo(false);
 });
+
 // 팝업닫기
-$('.todo-pop-container').on('click', function (e) {
+$(document).on('click', '.todo-pop-container', function (e) {
   if (e.target === e.currentTarget) {
     $('.todo-pop').css('visibility', 'hidden');
-    if (modifyResultTF) {
-      window.location.reload();
-    }
   }
 });
+
+/* READ TODO ---------------------------------------------------------------- */
+const getTodo = (isMain) => {
+  $.ajax({
+    type: 'GET',
+    url: '/todolist',
+    data: {},
+    success: (res) => {
+      const data = res['todolist'];
+      console.log(data);
+      $todoInput.value = '';
+
+      // TODO LIST 최대 등록 개수 체크
+      if (data.length >= 10) {
+        $todoInput.disabled = true;
+        $todoAddBtn.disabled = true;
+        $todoInput.placeholder = '';
+        const alert_html = `<span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span>`;
+        $('.alert-box').empty();
+        $('.alert-box').append(alert_html);
+      } else {
+        $todoInput.disabled = false;
+        $todoAddBtn.disabled = false;
+        $('.alert-box').empty();
+      }
+
+      // 메인화면 OR 팝업창
+      if (isMain) {
+        printMainTodo(data);
+      } else {
+        // 팝업창을 띄워도 메인화면 보여야 함 (backdrop 반투명)
+        printMainTodo(data);
+        printPopupTodo(data);
+      }
+    },
+  });
+};
+
+const printPopupTodo = (data) => {
+  // 새로고침 없을 때 중복 호출 방지
+  $('.todo-popup-list').empty();
+
+  data.map((item) => {
+    // isDone 값이 boolean이 아니라 string으로 넘어옴
+    const { todo, isDone, timestamp } = item;
+    let todo_popup_html;
+    if (isDone === 'false') {
+      todo_popup_html = `<li>
+                           <input type="checkbox" class="" />
+                           <span class="todo-text">${todo}</span>
+                           <span class="a11y-hidden">${timestamp}</span>
+                           <button class='todo-delete-btn'>delete</button>
+                           <button class='todo-edit-btn'>edit</button>
+                         </li>`;
+    } else {
+      todo_popup_html = `<li>
+                           <input type="checkbox" class="" checked/>
+                           <span class="todo-text todo-done">${todo}</span>
+                           <span class="a11y-hidden">${timestamp}</span>
+                           <button class='todo-delete-btn'>delete</button>
+                           <button class='todo-edit-btn' disabled>edit</button>
+                         </li>`;
+    }
+    $('.todo-popup-list').append(todo_popup_html);
+  });
+};
+
+const printMainTodo = (data) => {
+  // 새로고침 없을 때 중복 호출 방지
+  $('.todo-list-ul').empty();
+
+  data.map((item) => {
+    const { todo, isDone, timestamp } = item;
+    let todo_html;
+    if (isDone === 'false') {
+      todo_html = `<li>
+                     <a href="#" class="todo-list-a">${todo}</a>
+                     <span class="a11y-hidden">${timestamp}</span>
+                   </li>`;
+    } else if (isDone === 'true') {
+      todo_html = `<li>
+                     <a href="#" class="todo-done todo-list-a">${todo}</a>
+                     <span class="a11y-hidden">${timestamp}</span>
+                   </li>`;
+    }
+    $('.todo-list-ul').append(todo_html);
+  });
+};
+
+/* ADD TODO ----------------------------------------------------------------- */
+const handleAddTodo = () => {
+  const todoItem = $('.todo-input').val();
+
+  if ($.trim(todoItem) === '') {
+    $('.todo-input').focus();
+    alert('Please enter your todo first.');
+  } else {
+    const timestamp = Date.now();
+
+    $.ajax({
+      type: 'POST',
+      url: '/todolist',
+      data: {
+        todo_give: todoItem,
+        isDone: false,
+        timestamp: timestamp,
+      },
+      success: (res) => {
+        alert(res['message']);
+        getTodo(true);
+        $('.todo-input').focus();
+      },
+    });
+  }
+};
+
+/* TOGGLE TODO -------------------------------------------------------------- */
+$('.todo-popup-list').on('change', (e) => {
+  const targetIsDone = e.target.checked;
+  const targetTodoText = e.target.parentElement.children[1].innerText;
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+
+  handleToggleTodo(targetIsDone, targetTimestamp);
+
+  if (targetIsDone) {
+    $('#edit-input').val('');
+    $('#edit-input').attr('disabled', true);
+    $('.modify-btn').attr('disabled', true);
+    $('#edit-input').attr('placeholder', '');
+  } else {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetTodoText);
+  }
+});
+
+const handleToggleTodo = (targetIsDone, targetTimestamp) => {
+  $.ajax({
+    type: 'POST',
+    url: '/todolist/toggletodo',
+    data: {
+      targetTimestamp: targetTimestamp,
+      todoIsDone: targetIsDone,
+    },
+    success: (res) => {
+      console.log(res.message);
+      getTodo(false);
+    },
+  });
+};
+
+/* EDIT TODO ---------------------------------------------------------------- */
+const handleEditTodo = (targetTimestamp) => {
+  const editTodoItem = $('#edit-input').val();
+  // console.log(editTodoItem);
+  if ($.trim(editTodoItem) === '') {
+    $('#edit-input').focus();
+    alert('Please enter your todo first.');
+  } else {
+    $.ajax({
+      type: 'POST',
+      url: '/todolist/edittodo',
+      data: {
+        new_todoText: editTodoItem,
+        targetTimestamp: targetTimestamp,
+      },
+      success: (res) => {
+        console.log(res.message);
+        getTodo(false);
+        $('#edit-input').val('');
+        $('#edit-input').attr('placeholder', editTodoItem);
+      },
+    });
+  }
+};
+
+/* CLICKED AT POPUP PAGE ---------------------------------------------------- */
+$(document).on('click', '.todo-edit-btn', (e) => {
+  $('.modify-btn').unbind();
+
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+  const targetText = e.target.parentElement.children[1].innerText;
+  const todoIsDone = [...e.target.parentElement.children[1].classList].includes(
+    'todo-done'
+  );
+
+  if (!todoIsDone) {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetText);
+  }
+  $('#edit-input').attr('placeholder', targetText);
+  $('#edit-input').val('');
+  $('.modify-btn').on('click', () => handleEditTodo(targetTimestamp));
+});
+
+/* DELETE TODO -------------------------------------------------------------- */
+$(document).on('click', '.todo-delete-btn', (e) => {
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+  const confirmDelete = confirm(`Are you sure you want to delete this todo?`);
+  confirmDelete && handleDeleteTodo(targetTimestamp);
+});
+
+const handleDeleteTodo = (targetTimestamp) => {
+  $.ajax({
+    type: 'DELETE',
+    url: '/todolist/deletetodo',
+    data: {
+      targetTimestamp: targetTimestamp,
+    },
+    success: (res) => {
+      console.log(res['message']);
+      getTodo(false);
+    },
+  });
+};
 
 /* QUOTE -------------------------------------------------------------------- */
 $(document).ready(function () {
   show_quote();
 
   $('#like_button').click(function () {
-    $(this).prop("disabled", true);
-    $(this).css("cursor", "not-allowed");
-  })
+    $(this).prop('disabled', true);
+    $(this).css('cursor', 'not-allowed');
+  });
 
   $('#dislike_button').click(function () {
-    $(this).prop("disabled", true);
-    $(this).css("cursor", "not-allowed")
-  })
+    $(this).prop('disabled', true);
+    $(this).css('cursor', 'not-allowed');
+  });
 });
 
 function show_quote() {
@@ -118,16 +359,16 @@ function show_quote() {
     url: '/quote',
     data: {},
     success: function (response) {
-      let chosen = response['quotes'][Math.floor(Math.random() * 10)]
-      let quote = chosen['quote']
-      let like = chosen['like']
-      let dislike = chosen['dislike']
+      let chosen = response['quotes'][Math.floor(Math.random() * 10)];
+      let quote = chosen['quote'];
+      let like = chosen['like'];
+      let dislike = chosen['dislike'];
 
-      $('#quote').append(quote)
-      $('#like_number').append(like)
-      $('#dislike_number').append(dislike)
-      console.log(quote, like, dislike)
-    }
+      $('#quote').append(quote);
+      $('#like_number').append(like);
+      $('#dislike_number').append(dislike);
+      console.log(quote, like, dislike);
+    },
   });
 }
 
@@ -141,28 +382,22 @@ function count(type) {
   const result3Element = document.getElementById('quote');
   let written = result3Element.innerText;
 
-
   if (type === 'plus') {
     number = parseInt(number) + 1;
     resultElement.innerText = number;
-    alert('투표 완료 ❕')
-
+    alert('투표 완료 ❕');
 
     // $('#like_button').hide()
     // let disabled_like_button = `<input onclick="count('disabled')" id="disabled_like_button" type="button" class="btn btn-outline-primary" value="Like 👍">`
-    //
     // $('#buttons').prepend(disabled_like_button)
-
   } else if (type === 'minus') {
     number2 = parseInt(number2) - 1;
     result2Element.innerText = number2;
-    alert('투표 완료 ❕')
+    alert('투표 완료 ❕');
 
     // $('#dislike_button').hide()
     // let disabled_dislike_button = `<input onclick="count('disabled')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">`
-    //
     // $('#buttons').append(disabled_dislike_button)
-
   }
   //else if (type === 'disabled') {
   //     alert('중복 투표는 불가능 합니다.. 😓')
@@ -170,14 +405,13 @@ function count(type) {
 
   //*button disabled
 
-
   $.ajax({
     type: 'POST',
     url: '/quote',
-    data: {like_give: number, dislike_give: number2, written_give: written},
+    data: { like_give: number, dislike_give: number2, written_give: written },
     success: function (response) {
-      console.log(response['msg'])
-    }
+      console.log(response['msg']);
+    },
   });
 }
 
@@ -189,7 +423,7 @@ const dbTestPost = () => {
   $.ajax({
     type: 'POST',
     url: '/dbtest',
-    data: {text_give: text},
+    data: { text_give: text },
     success: (res) => {
       alert(res['msg']);
     },

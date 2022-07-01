@@ -46,43 +46,25 @@
       <div class="todo-pop-container">
         <div class="todo-content-box">
           <div class="todo-content-list">
-            <ul>
-              <li>
+            <ul class="todo-popup-list">
+              <!-- <li>
                 <input type="checkbox" class="" />
                 <span class="todo-done">눕기</span>
-                <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
+                <button class='todo-delete-btn'>delete</button>
+                <button class='todo-edit-btn' disabled>edit</button>
+              </li> -->
+              <!-- <li>
                 <input type="checkbox" class="" checked />
                 <span>러닝</span>
                 <button>delete</button>
-                <button>edit</button>
-              </li>
-              <li>
+                <button class='todo-edit-btn'>edit</button>
+              </li> -->
+              <!-- <li>
                 <input type="checkbox" class="" />
                 <span class="todo-done">고기먹기</span>
                 <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" checked />
-                <span>번지점프</span>
-                <button>delete</button>
-                <button>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" />
-                <span class="todo-done">마라톤</span>
-                <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" checked />
-                <span>다이빙</span>
-                <button>delete</button>
-                <button>edit</button>
-              </li>
+                <button class='todo-edit-btn' disabled>edit</button>
+              </li> -->
             </ul>
           </div>
           <div class="todo-editor">
@@ -118,8 +100,11 @@
                   class="todo-input"
                   maxlength="30"
                   placeholder="Enter Your To-do"
+                  onkeyup="if(window.event.keyCode===13){handleAddTodo()}"
                 />
-                <button class="todo-enter">Enter</button>
+                <button class="todo-enter" onclick="handleAddTodo()">
+                  Enter
+                </button>
                 <div class="alert-box">
                   <!-- TODO 10개 이상 들어가면 경고 메시지 -->
                   <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
@@ -131,12 +116,9 @@
         <section class="todo-section02">
           <div class="todo-list-box">
             <ul class="todo-list-ul">
-              <li><a href="#" class="todo-done todo-list-a">눕기</a></li>
-              <li><a href="#" class="todo-list-a">러닝</a></li>
-              <li><a href="#" class="todo-done todo-list-a">고기먹기</a></li>
-              <li><a href="#" class="todo-list-a">번지점프</a></li>
-              <li><a href="#" class="todo-done todo-list-a">마라톤</a></li>
-              <li><a href="#" class="todo-list-a">다이빙</a></li>
+              <!-- <li><a href="#" class="todo-done todo-list-a">눕기</a></li> -->
+              <!-- <li><a href="#" class="todo-list-a">러닝</a></li> -->
+              <!-- <li><a href="#" class="todo-done todo-list-a">고기먹기</a></li> -->
             </ul>
           </div>
         </section>
