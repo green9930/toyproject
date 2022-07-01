@@ -20,6 +20,16 @@ $(document).ready(() => {
 /* QUOTE -------------------------------------------------------------------- */
 $(document).ready(function () {
   show_quote();
+
+  $('#like_button').click(function () {
+    $(this).prop("disabled", true);
+    $(this).css("cursor", "not-allowed");
+  })
+
+  $('#dislike_button').click(function () {
+    $(this).prop("disabled", true);
+    $(this).css("cursor", "not-allowed")
+  })
 });
 
 function show_quote() {
@@ -57,25 +67,29 @@ function count(type) {
     resultElement.innerText = number;
     alert('투표 완료 ❕')
 
-    $('#like_button').hide()
-    let disabled_like_button = `<input onclick="count('disabled')" id="disabled_like_button" type="button" class="btn btn-outline-primary" value="Like 👍">`
 
-    $('#buttons').prepend(disabled_like_button)
+    // $('#like_button').hide()
+    // let disabled_like_button = `<input onclick="count('disabled')" id="disabled_like_button" type="button" class="btn btn-outline-primary" value="Like 👍">`
+    //
+    // $('#buttons').prepend(disabled_like_button)
 
   } else if (type === 'minus') {
     number2 = parseInt(number2) - 1;
     result2Element.innerText = number2;
-
     alert('투표 완료 ❕')
 
-    $('#dislike_button').hide()
-    let disabled_dislike_button = `<input onclick="count('disabled')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">`
+    // $('#dislike_button').hide()
+    // let disabled_dislike_button = `<input onclick="count('disabled')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">`
+    //
+    // $('#buttons').append(disabled_dislike_button)
 
-    $('#buttons').append(disabled_dislike_button)
-
-  } else if (type === 'disabled') {
-    alert('중복 투표는 불가능 합니다.. 😓')
   }
+  //else if (type === 'disabled') {
+  //     alert('중복 투표는 불가능 합니다.. 😓')
+  // }
+
+  //*button disabled
+
 
   $.ajax({
     type: 'POST',

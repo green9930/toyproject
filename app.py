@@ -44,6 +44,7 @@ def quote_post():
     db.quote.update_one({'quote': written_receive}, {'$set': {'like': like_receive, 'dislike': dislike_receive}})
     return jsonify({'msg': 'MongoDB Update 완료 ❕'})
 
+
 # DB TEST -------------------------------------------------------------------- #
 @app.route('/dbtest', methods=['POST'])
 def dbtest_post():
