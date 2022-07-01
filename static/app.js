@@ -9,9 +9,12 @@ $(document).ready(() => {
   test();
   // 배경화면 호출
   backgroundInit();
-
-  // =========================================================================todo 리스트를 꺼내 나열
-  getTodoList();
+  // 위치정보 호출
+  geoStart();
+  // TODOLIST 호출
+  getTodo(true);
+  // QUOTE 호출
+  show_quote();
 });
 
 /* BACKGROUND --------------------------------------------------------------- */
@@ -37,42 +40,35 @@ function backgroundInit() {
 }
 
 /* WEATHER ------------------------------------------------------------------ */
-// 위도, 경도를 알아 내는 함수
-function onGeoSucess(position) {
+function onGeoSuccess(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
-  console.log('위치정보를 확인하였습니다.', lat, lon);
-}
-// navigator.geolocation error 시 작동하는 함수
-function onGeoError() {
-  alert('위치정보를 확인할 수 없습니다.');
-}
-// 위치정보 허용을 물어보는 함수
-navigator.geolocation.getCurrentPosition(onGeoSucess, onGeoError); // sucess 시, 첫번째 인수 실행 / error 시, 두번째 인수 실행
+  const API_KEY = '5cedb12d7cfe681080f2af92fcdf062c';
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
-function getWeather() {
-  // API key 변수
-  const APIKEY = '5cedb12d7cfe681080f2af92fcdf062c';
-  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
-  // 날씨 API url
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=37.5503563&lon=127.0952986&appid=${APIKEY}&units=metric`;
   $.ajax({
     type: 'GET',
     url: url,
     data: {},
-    success: function (response) {
-      const temp = response['main']['temp'];
-      const city = response['name'];
-      const des = response['weather'][0]['description'];
-      console.log(temp);
+    success: (res) => {
+      const temp = res['main']['temp'];
+      const city = res['name'];
+      const dec = res['weather'][0]['main'];
       $('.weather01').text(temp);
       $('.weather02').text(city);
-      $('.weather03').text(des);
+      $('.weather03').text(dec);
     },
   });
 }
 
-getWeather();
+function onGeoError() {
+  alert('위치 정보를 받을 수 없습니다.');
+}
+
+function geoStart() {
+  navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+}
+
 /* CLOCK -------------------------------------------------------------------- */
 // 우선 html에서 Element를 자바스크립트로 가져온다.
 const clock = document.querySelector('.clock'); // class는 .을 찍어야한다.
@@ -81,6 +77,7 @@ function getClock() {
   const date = new Date();
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
+
   clock.innerText = `${hours}:${minutes}`;
 }
 
@@ -89,230 +86,354 @@ setInterval(getClock, 1000);
 
 /* TODOLIST ----------------------------------------------------------------- */
 
+const $todoInput = document.querySelector('.todo-input');
+const $todoAddBtn = document.querySelector('.todo-enter');
+
 /* TODO POPUP --------------------------------------------------------------- */
-// 팝업열기
-$(document).on('click','.todo-list-a',function(e){
+/* OPEN POPUP --------------------------------------------------------------- */
+$(document).on('click', '.todo-list-a', function (e) {
   e.preventDefault();
-  if ($(this).is('.todo-done-text')) {
+  const targetTimestamp = e.currentTarget.nextElementSibling.innerText;
+  const targetText = e.target.innerText;
+  const arr = [...e.target.classList];
+  const isTodoDone = arr.includes('todo-done');
+
+  if (isTodoDone) {
+    $('#edit-input').attr('disabled', true);
+    $('.modify-btn').attr('disabled', true);
     $('#edit-input').attr('placeholder', '');
-    $('.modify-num').val('');
+  } else {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetText);
+    $('.modify-btn').on('click', () => handleEditTodo(targetTimestamp));
   }
+
   $('.todo-pop').css('visibility', 'visible');
+
+
+  getTodo(false);
 });
-// 팝업닫기
-$(document).on('click','.todo-pop-container',function(e){
+
+/* CLOSE POPUP -------------------------------------------------------------- */
+$(document).on('click', '.todo-pop-container', function (e) {
   if (e.target === e.currentTarget) {
     $('.todo-pop').css('visibility', 'hidden');
   }
 });
 
-// ===========================================================================todo 글 입력 엔터
-  // input에서 엔터
-  $('#add-input').on({
-    onkeyup(e){
-      if(e.keyCode===13){
-        todoWriteAction();
-      }
-    }
-  })
-// ================================================================================== todo 글 작성 액션
-function todoWriteAction(){
-  let $todo = $("#add-input").val();
-  if($.trim($todo) === ""){
-    $("#add-input").focus();
-    alert("Please enter your to-do list.");
-    return false;
-  }
-  console.log(Date.now());
+
+/* READ TODO ---------------------------------------------------------------- */
+const getTodo = (isMain) => {
   $.ajax({
-    url: './todoWriteAction',
-    type: 'POST',
-    data: {togoVal:$todo, doneVal:0, numVal:Date.now()},
-    success: function (result) {
-      alert(result.msg);
-      getTodoList();
-    },complete:function(){
-      $('.todo-input').val('').focus();
-    }
-  })
-}
+    type: 'GET',
+    url: '/todolist',
+    data: {},
+    success: (res) => {
+      const data = res['todolist'];
+      $todoInput.value = '';
 
-// ================================================================================== todo글 불러냄
-let arr = []; /* 팝업에 뿌려주려고*/
-function getTodoList(){
-  arr=[];
-  $.ajax({
-    url:'./getTodoList',
-    type:'GET',
-    success:function(result){
-      $(".todo-list-ul").empty();
-      let temp_html = '';
-      let rows = result.msg;
-      if(rows.length>=10){
-        $('#add-input').prop("disabled",true).val("You can create up to 10 to-do lists per day.").css({'color':'red',"fontSize":'18px'});
-        $(".todo-enter").prop("disabled",true).css("cursor",'not-allowed');
-      }else{
-        $('#add-input').prop("disabled",false).val("").css({'color':'#fff',"fontSize":'14px'});
-        $(".todo-enter").prop("disabled",false);
+      // TODO LIST 최대 등록 개수 체크
+      if (data.length >= 10) {
+        $todoInput.disabled = true;
+        $todoAddBtn.disabled = true;
+        $todoInput.placeholder = '';
+        const alert_html = `<span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span>`;
+        $('.alert-box').empty();
+        $('.alert-box').append(alert_html);
+      } else {
+        $todoInput.disabled = false;
+        $todoAddBtn.disabled = false;
+        $('.alert-box').empty();
       }
-      for(let i=0; i<rows.length; i++){
-        let todo    = rows[i].todo
-        let num     = rows[i].num
-        let done    = rows[i].done
-        let dic     = {"todo":todo,"num":num,"done":done}
-        arr.push(dic);
-        temp_html = ``
-        if(Number(done) === 0){
-          temp_html+=`<li>
-                          <span class="todo-list-a" onclick="todoDetail(this)" data-num="${num}">${todo}</span>
-                      </li>`
-        }else{
-          temp_html+=`<li>
-                          <span class="todo-list-a todo-done-text" onclick="todoDetail(this)">${todo}</span>
-                      </li>`
-        }
-        $(".todo-list-ul").append(temp_html)
+
+      // 메인화면 OR 팝업창
+      if (isMain) {
+        printMainTodo(data);
+      } else {
+        printMainTodo(data);
+        printPopupTodo(data);
       }
-    }
-  })
-}
-
-// ================================================================================== 팝업에 글 뿌림
-function todoDetail(obj){
-  let txt = $(obj).text();
-  let num = $(obj).data("num");
-  $("#edit-input").attr("placeholder",txt).val('');
-  $(".modify-num").val(num);
-  console.log("들어갔나:",arr);
-  $(".todo-content-list ul").empty();
-  arr.map(function(val,index){
-    let todo  = val.todo
-    let num   = val.num
-    let done  = val.done
-    let temp_html = ``;
-    if(done === 0){
-      temp_html = `<li><input type="checkbox" data-num="${num}" class="todo-chk-situation"/><span>${todo}</span><button class="delBtn" data-num="${num}">delete</button><button class="editBtn" data-num="${num}">edit</button></li>`;
-    }else{
-      temp_html = `<li><input type="checkbox" data-num="${num}" checked class="todo-chk-situation"/><span class="todo-done-text">${todo}</span><button class="delBtn" data-num="${num}">delete</button><button class="editBtn" disabled>edit</button></li>`
-    }
-    $(".todo-content-list ul").append(temp_html);
-  })
-}
-
-//팝업의 edit버튼을 누름
-  $(document).on('click','.editBtn',function(e){
-    let num = $(this).data("num");
-    let txt = $(this).prev().prev().text();
-    $(".modify-num").val(num);
-    $("#edit-input").attr("placeholder",txt).val('').focus();
-  })
-
-  // 팝업에 modify눌렀을 때
-  $(".modify-btn").on({
-    click(){
-      modifyAction();
-    }
-  })
-
-function modifyAction(){
-  let $editInput = $("#edit-input");
-  if($editInput.val() === ''){
-    alert('변경할 내용을 입력해주세요.');
-    $editInput.focus();
-    return false;
-  }
-  $.ajax({
-    url:'./todoModify',
-    type:'post',
-    data:{modiData:$editInput.val(), modiNum:$(".modify-num").val()},
-    success:function(result){
-      console.log("modifyAction->",result);
     },
-    complete:function(){
-      for(let i=0; i<arr.length; i++){
-        if(arr[i].num === $(".modify-num").val()){
-          arr[i].todo = $editInput.val();
-          $(".todo-content-list ul li:eq("+i+") span").text($editInput.val());
-        }
-      }
-      getTodoList();
-    }
-  })
-}
+  });
+};
 
-  // 팝업에 delete눌렀을 때
-  $(document).on('click','.delBtn',function(e){
-    if (confirm('삭제하시겠습니까?')) {
-      deleteAction($(this));
-    }
-  })
+const printPopupTodo = (data) => {
+  // 새로고침 없을 때 중복 호출 방지
+  $('.todo-popup-list').empty();
 
-function deleteAction(obj){
-  let $obj = obj;
-  console.log($obj.data('num'));
-  $.ajax({
-    url:'./deleteAction',
-    type:"post",
-    data:{todoNum:$obj.data('num')},
-    success:function(result){
-      for(let i=0; i<arr.length; i++){
-        if(Number(arr[i].num) === Number($obj.data('num'))){
-          arr.splice(i,1);
-          $(".todo-content-list ul li:eq("+i+")").remove();
-        }
-      }
-      $("#edit-input, .modify-num").val('').attr('placeholder','');
-    },complete:function(){
-      getTodoList();
+  data.map((item) => {
+    const { todo, isDone, timestamp } = item;
+    let todo_popup_html;
+    if (isDone === 'false') {
+      todo_popup_html = `<li>
+                           <input type="checkbox" class="" />
+                           <span class="todo-text">${todo}</span>
+                           <span class="a11y-hidden">${timestamp}</span>
+                           <button class='todo-delete-btn'>delete</button>
+                           <button class='todo-edit-btn'>edit</button>
+                         </li>`;
+    } else {
+      todo_popup_html = `<li>
+                           <input type="checkbox" class="" checked/>
+                           <span class="todo-text todo-done">${todo}</span>
+                           <span class="a11y-hidden">${timestamp}</span>
+                           <button class='todo-delete-btn'>delete</button>
+                           <button class='todo-edit-btn' disabled>edit</button>
+                         </li>`;
     }
-  })
-}
+    $('.todo-popup-list').append(todo_popup_html);
+  });
+};
 
-// 팝업에 상태 이모지 토글로 만들기
-$(document).on('change','.todo-chk-situation',function() {
-  $(this).next('span').toggleClass('todo-done-text');
-  const num = $(this).data('num');
-  if ($(this).prop('checked')) {
-    //true
-    $(this).nextAll('button:eq(1)').prop("disabled", true);
-    $("#edit-input, .modify-num").val('').attr('placeholder','');
-    todoDoneAction(num, 1);
+const printMainTodo = (data) => {
+  // 새로고침 없을 때 중복 호출 방지
+  $('.todo-list-ul').empty();
+
+  data.map((item) => {
+    const { todo, isDone, timestamp } = item;
+    let todo_html;
+    if (isDone === 'false') {
+      todo_html = `<li>
+                     <a href="#" class="todo-list-a">${todo}</a>
+                     <span class="a11y-hidden">${timestamp}</span>
+                   </li>`;
+    } else if (isDone === 'true') {
+      todo_html = `<li>
+                     <a href="#" class="todo-done todo-list-a">${todo}</a>
+                     <span class="a11y-hidden">${timestamp}</span>
+                   </li>`;
+    }
+    $('.todo-list-ul').append(todo_html);
+  });
+};
+
+/* ADD TODO ----------------------------------------------------------------- */
+const handleAddTodo = () => {
+  const todoItem = $('.todo-input').val();
+
+  if ($.trim(todoItem) === '') {
+    $('.todo-input').focus();
+    alert('Please enter your todo first.');
   } else {
-    //false
-    $(this).nextAll('button:eq(1)').prop("disabled", false);
-    todoDoneAction(num, 0);
+    const timestamp = Date.now();
+
+    $.ajax({
+      type: 'POST',
+      url: '/todolist',
+      data: {
+        todo_give: todoItem,
+        isDone: false,
+        timestamp: timestamp,
+      },
+      success: (res) => {
+        alert(res['message']);
+        getTodo(true);
+        $('.todo-input').focus();
+      },
+    });
   }
-})
+};
 
-function todoDoneAction(num,tf){
-  console.log("응->",num,tf);
+/* TOGGLE TODO -------------------------------------------------------------- */
+$('.todo-popup-list').on('change', (e) => {
+  const targetIsDone = e.target.checked;
+  const targetTodoText = e.target.parentElement.children[1].innerText;
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+
+  handleToggleTodo(targetIsDone, targetTimestamp);
+
+  if (targetIsDone) {
+    $('#edit-input').val('');
+    $('#edit-input').attr('disabled', true);
+    $('.modify-btn').attr('disabled', true);
+    $('#edit-input').attr('placeholder', '');
+  } else {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetTodoText);
+  }
+});
+
+const handleToggleTodo = (targetIsDone, targetTimestamp) => {
   $.ajax({
-    url:'./todoDoneAction',
-    type:'post',
-    data:{doneNum:num, doneFT:tf},
-    success:function(result){
+    type: 'POST',
+    url: '/todolist/toggletodo',
+    data: {
+      targetTimestamp: targetTimestamp,
+      todoIsDone: targetIsDone,
     },
-    complete:function(){
-      getTodoList();
-    }
-  })
-}
+    success: (res) => {
+      console.log(res.message);
+      getTodo(false);
+    },
+  });
+};
 
+/* EDIT TODO ---------------------------------------------------------------- */
+const handleEditTodo = (targetTimestamp) => {
+  const editTodoItem = $('#edit-input').val();
 
+  if ($.trim(editTodoItem) === '') {
+    $('#edit-input').focus();
+    alert('Please enter your todo first.');
+  } else {
+    $.ajax({
+      type: 'POST',
+      url: '/todolist/edittodo',
+      data: {
+        new_todoText: editTodoItem,
+        targetTimestamp: targetTimestamp,
+      },
+      success: (res) => {
+        console.log(res.message);
+        getTodo(false);
+        $('#edit-input').val('');
+        $('#edit-input').attr('placeholder', editTodoItem);
+      },
+    });
+  }
+};
 
+/* CLICKED AT POPUP PAGE ---------------------------------------------------- */
+$(document).on('click', '.todo-edit-btn', (e) => {
+  $('.modify-btn').unbind();
 
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+  const targetText = e.target.parentElement.children[1].innerText;
+  const todoIsDone = [...e.target.parentElement.children[1].classList].includes(
+    'todo-done'
+  );
+
+  if (!todoIsDone) {
+    $('#edit-input').attr('disabled', false);
+    $('.modify-btn').attr('disabled', false);
+    $('#edit-input').attr('placeholder', targetText);
+  }
+  $('#edit-input').attr('placeholder', targetText);
+  $('#edit-input').val('');
+  $('.modify-btn').on('click', () => handleEditTodo(targetTimestamp));
+});
+
+/* DELETE TODO -------------------------------------------------------------- */
+$(document).on('click', '.todo-delete-btn', (e) => {
+  const targetTimestamp = e.target.parentElement.children[2].innerText;
+  const confirmDelete = confirm(`Are you sure you want to delete this todo?`);
+
+  confirmDelete && handleDeleteTodo(targetTimestamp);
+});
+
+const handleDeleteTodo = (targetTimestamp) => {
+  $.ajax({
+    type: 'DELETE',
+    url: '/todolist/deletetodo',
+    data: {
+      targetTimestamp: targetTimestamp,
+    },
+    success: (res) => {
+      console.log(res['message']);
+      getTodo(false);
+    },
+  });
+};
 
 /* QUOTE -------------------------------------------------------------------- */
 
+$('#like_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
+});
+
+$('#dislike_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
+});
+
+function show_quote() {
+  $.ajax({
+    type: 'GET',
+    url: '/quote',
+    data: {},
+    success: function (response) {
+      let chosen = response['quotes'][Math.floor(Math.random() * 10)];
+      let quote = chosen['quote'];
+      let like = chosen['like'];
+      let dislike = chosen['dislike'];
+
+      $('#quote').append(quote);
+      $('#like_number').append(like);
+      $('#dislike_number').append(dislike);
+      console.log(quote, like, dislike);
+    },
+  });
+}
+
+function count(type) {
+  const resultElement = document.getElementById('like_number');
+  let number = resultElement.innerText;
+
+  const result2Element = document.getElementById('dislike_number');
+  let number2 = result2Element.innerText;
+
+  const result3Element = document.getElementById('quote');
+  let written = result3Element.innerText;
+
+  if (type === 'plus') {
+    number = parseInt(number) + 1;
+    resultElement.innerText = number;
+    alert('투표 완료 ❕');
+
+    // $('#like_button').hide()
+    // let disabled_like_button = `<input onclick="count('disabled')" id="disabled_like_button" type="button" class="btn btn-outline-primary" value="Like 👍">`
+    // $('#buttons').prepend(disabled_like_button)
+  } else if (type === 'minus') {
+    number2 = parseInt(number2) - 1;
+    result2Element.innerText = number2;
+    alert('투표 완료 ❕');
+
+    // $('#dislike_button').hide()
+    // let disabled_dislike_button = `<input onclick="count('disabled')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">`
+    // $('#buttons').append(disabled_dislike_button)
+  }
+  //else if (type === 'disabled') {
+  //     alert('중복 투표는 불가능 합니다.. 😓')
+  // }
+
+  //*button disabled
+
+  $.ajax({
+    type: 'POST',
+    url: '/quote',
+    data: { like_give: number, dislike_give: number2, written_give: written },
+    success: function (response) {
+      console.log(response['msg']);
+    },
+  });
+}
+
 /* DB TEST ------------------------------------------------------------------ */
+// const dbTestPost = () => {
+//   // input 입력 내용
+//   let text = $('.dbtest-input').val();
+//   console.log(text);
+//   $.ajax({
+//     type: 'POST',
+//     url: '/dbtest',
+//     data: { text_give: text },
+//     success: (res) => {
+//       alert(res['msg']);
+//     },
+//   });
+// };
+
 const dbTestPost = () => {
   // input 입력 내용
   let text = $('.dbtest-input').val();
   console.log(text);
   $.ajax({
     type: 'POST',
-    url: '/dbtest',
-    data: { text_give: text },
+    url: '/quote/post',
+    data: { text_give: text, like: 0, dislike: 0 },
     success: (res) => {
       alert(res['msg']);
     },

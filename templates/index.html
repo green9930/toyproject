@@ -32,32 +32,27 @@
     <h1 class="a11y-hidden">Momentum</h1>
     <!-- WEATHER --------------------------------------------------------------- -->
     <div class="weather">
-      <span class="weather01">ㅇㅇ</span>
-      <span class="weather02">ㅇㅇ</span>
-      <span class="weather03">ㅇㅇ</span>
+      <span class="weather01"></span>
+      <span class="weather02"></span>
+      <span class="weather03"></span>
     </div>
     <!-- CLOCK ----------------------------------------------------------------- -->
     <h2>CLOCK</h2>
-    <h3 class="clock">00:00</h3>
+    <span class="clock">00:00</span>
     <!-- TODOLIST -------------------------------------------------------------- -->
     <!-- TODO POPUP ------------------------------------------------------------ -->
     <div class="todo-pop">
       <div class="todo-pop-container">
         <div class="todo-content-box">
           <div class="todo-content-list">
-            <ul>
-              <li>
-                <!--<input type="checkbox" class="" checked/>
+
+            <ul class="todo-popup-list">
+              <!-- <li>
+                <input type="checkbox" class="" />
                 <span class="todo-done">눕기</span>
-                <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class=""/>
-                <span>러닝</span>
-                <button>delete</button>
-                <button>edit</button>-->
-              </li>
+                <button class='todo-delete-btn'>delete</button>
+                <button class='todo-edit-btn' disabled>edit</button>
+              </li> -->
             </ul>
           </div>
           <div class="todo-editor">
@@ -70,8 +65,6 @@
               placeholder=""
             />
             <button class="modify-btn">edit</button>
-            <!-- 수정/삭제 목적 글번호 넣는 input -->
-            <input type="hidden" class="modify-num" />
           </div>
         </div>
       </div>
@@ -92,10 +85,14 @@
                   maxlength="30"
 {#                  onkeyup="if(Event.keyCode === 13){ alert('t'); }"#}
                   placeholder="Enter Your To-do"
+                  onkeyup="if(window.event.keyCode===13){handleAddTodo()}"
                 />
-                <button class="todo-enter" onclick="todoWriteAction()">Enter</button>
+
+                <button class="todo-enter" onclick="handleAddTodo()">
+                  Enter
+                </button>
                 <div class="alert-box">
-                  <!-- TODO 10개 이상 들어가면 경고 메시지 -->
+                  <!-- TODO 10개 이상 등록 시 경고 메시지 -->
                   <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
                 </div>
               </div>
@@ -105,16 +102,34 @@
         <section class="todo-section02">
           <div class="todo-list-box">
             <ul class="todo-list-ul">
-              <!--<li><a href="#" class="todo-done todo-list-a">눕기</a></li>
-              <li><a href="#" class="todo-list-a">러닝</a></li>-->
+
+              <!-- <li><a href="#" class="todo-done todo-list-a">TODO</a></li> -->
             </ul>
           </div>
         </section>
       </div>
     </div>
     <!-- QUOTE ----------------------------------------------------------------- -->
-    <div>
-      <h2>QUOTE</h2>
+    <div class="wrap">
+      <span id="quote" class="quote"></span>
+      <span id="buttons" class="buttons">
+        <input
+          onclick="count('plus')"
+          id="like_button"
+          type="button"
+          class="btn btn-outline-primary"
+          value="Like 👍"
+        />
+        <input
+          onclick="count('minus')"
+          id="dislike_button"
+          type="button"
+          class="btn btn-outline-danger"
+          value="Dislike 👎"
+        />
+      </span>
+      <div class="like_number" id="like_number"></div>
+      <div class="dislike_number" id="dislike_number"></div>
     </div>
   </body>
 </html>

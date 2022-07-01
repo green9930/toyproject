@@ -1,4 +1,3 @@
-import requests
 from flask import Flask, render_template, request, jsonify
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
@@ -28,23 +27,69 @@ def home():
 
 
 # TODOLIST ------------------------------------------------------------------- #
-#======================================================== todo-list 글 작성(엔터 눌렸을 때)
-@app.route("/todoWriteAction", methods=["POST"])
-def todoWriteAction():
-    todo_receive = request.form['togoVal']
-    done_receive = int(request.form['doneVal'])
-    num_receive = request.form['numVal']
 
-    now = datetime.now()
+# READ TODO ------------------------------------------------------------------ #
+
+@app.route('/todolist', methods=['GET'])
+def read_todo():
+    todo_list = list(db.todolist.find({}, {'_id': False}))
+    return jsonify({'todolist': todo_list})
+
+
+# ADD TODO ------------------------------------------------------------------- #
+
+@app.route('/todolist', methods=['POST'])
+def add_todo():
+    todo_receive = request.form['todo_give']
+    todo_isDone = request.form['isDone']
+    todo_timestamp = request.form['timestamp']
+
     doc = {
         'todo': todo_receive,
-        'done':done_receive,
-        'num':num_receive,
-        'dateTime':now
+        'isDone': todo_isDone,
+        'timestamp': todo_timestamp,
     }
-    print(doc)
-    db.todo.insert_one(doc)
-    return jsonify({'msg': '완료!'})
+
+    db.todolist.insert_one(doc)
+    return jsonify({'message': 'SUCCESS: UPDATE TODO'})
+
+# TOGGLE TODO ---------------------------------------------------------------- #
+
+
+@app.route('/todolist/toggletodo', methods=['POST'])
+def toggle_todo():
+    # old_todoText = request.form['old_todoText']
+    target_timestamp = request.form['targetTimestamp']
+    todo_is_done = request.form['todoIsDone']
+
+    db.todolist.update_one({'timestamp': target_timestamp}, {
+                           '$set': {'isDone': todo_is_done}})
+
+    return jsonify({'message': 'SUCCESS: TOGGLE TODO'})
+
+# EDIT TODO ------------------------------------------------------------------ #
+
+
+@app.route('/todolist/edittodo', methods=['POST'])
+def edit_todo():
+    # old_todoText = request.form['old_todoText']
+    target_timestamp = request.form['targetTimestamp']
+    new_todoText = request.form['new_todoText']
+
+    db.todolist.update_one({'timestamp': target_timestamp}, {
+                           '$set': {'todo': new_todoText}})
+
+    return jsonify({'message': 'SUCCESS: EDIT TODO'})
+
+# DELETE TODO ---------------------------------------------------------------- #
+
+
+@app.route('/todolist/deletetodo', methods=['DELETE'])
+def delete_todo():
+    target_timestamp = request.form['targetTimestamp']
+    db.todolist.delete_one({'timestamp': target_timestamp})
+
+    return jsonify({'message': 'SUCCESS: DELETE TODO'})
 
 #====================================================================todo-list 글 가져옴
 @app.route("/getTodoList", methods=["GET"])
@@ -93,16 +138,52 @@ def todoDoneAction():
 # QUOTE ---------------------------------------------------------------------- #
 
 
-# DB TEST -------------------------------------------------------------------- #
-@app.route('/dbtest', methods=['POST'])
-def dbtest_post():
+@app.route("/quote", methods=["GET"])
+def quote_get():
+    quote_list = list(db.quote.find({}, {'_id': False}))
+    print(quote_list)
+    return jsonify({'quotes': quote_list})
+
+
+@app.route("/quote", methods=["POST"])
+def quote_post():
+    like_receive = request.form['like_give']
+    dislike_receive = request.form['dislike_give']
+    written_receive = request.form['written_give']
+
+    db.quote.update_one({'quote': written_receive}, {
+                        '$set': {'like': like_receive, 'dislike': dislike_receive}})
+    return jsonify({'msg': 'MongoDB Update 완료 ❕'})
+
+
+# QUOTE POST ----------------------------------------------------------------- #
+
+@app.route("/quote/post", methods=["POST"])
+def qoute_post_text():
     text_receive = request.form['text_give']
+    quote_like = request.form['like']
+    quote_dislike = request.form['dislike']
 
     doc = {
-        'text': text_receive,
+        'quote': text_receive,
+        'like': quote_like,
+        'dislike': quote_dislike,
     }
-    db.testdb.insert_one(doc)
-    return jsonify({'msg': 'MONGODB TEST SUCCESS'})
+
+    db.quote.insert_one(doc)
+    return jsonify({'msg': 'QUOTE UPDATE'})
+
+
+# DB TEST -------------------------------------------------------------------- #
+# @app.route('/dbtest', methods=['POST'])
+# def dbtest_post():
+#     text_receive = request.form['text_give']
+
+#     doc = {
+#         'text': text_receive,
+#     }
+#     db.testdb.insert_one(doc)
+#     return jsonify({'msg': 'MONGODB TEST SUCCESS'})
 
 
 if __name__ == '__main__':

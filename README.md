@@ -12,7 +12,7 @@
 
 ```text
 flask
-certifi              
+certifi          
 pymongo            
 python-dotenv      
 requests    
