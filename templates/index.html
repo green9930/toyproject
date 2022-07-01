@@ -16,7 +16,7 @@
   </head>
   <body>
     <!-- DB TEST --------------------------------------------------------------- -->
-    <!-- <div>
+    <div>
       <div>
         <input class="dbtest-input" type="text" />
         <button class="dbtest-btn" type="submit" onclick="dbTestPost()">
@@ -26,59 +26,37 @@
       <div class="dbtest-list">
         <span class="dbtest-text">DB TEST 텍스트 확인</span>
       </div>
-    </div> -->
+    </div>
     <!-- BACKGROUND ------------------------------------------------------------ -->
     <h2>BACKGROUND</h2>
     <h1 class="a11y-hidden">Momentum</h1>
     <!-- WEATHER --------------------------------------------------------------- -->
-    <div>
-      <h2>WEATHER</h2>
+    <div class="weather">
+      <span class="weather01">ㅇㅇ</span>
+      <span class="weather02">ㅇㅇ</span>
+      <span class="weather03">ㅇㅇ</span>
     </div>
     <!-- CLOCK ----------------------------------------------------------------- -->
-    <div>
-      <h2>CLOCK</h2>
-    </div>
+    <h2>CLOCK</h2>
+    <h3 class="clock">00:00</h3>
     <!-- TODOLIST -------------------------------------------------------------- -->
+    <!-- TODO POPUP ------------------------------------------------------------ -->
     <div class="todo-pop">
       <div class="todo-pop-container">
         <div class="todo-content-box">
           <div class="todo-content-list">
             <ul>
               <li>
-                <input type="checkbox" class="" />
+                <!--<input type="checkbox" class="" checked/>
                 <span class="todo-done">눕기</span>
                 <button>delete</button>
                 <button disabled>edit</button>
               </li>
               <li>
-                <input type="checkbox" class="" checked />
+                <input type="checkbox" class=""/>
                 <span>러닝</span>
                 <button>delete</button>
-                <button>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" />
-                <span class="todo-done">고기먹기</span>
-                <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" checked />
-                <span>번지점프</span>
-                <button>delete</button>
-                <button>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" />
-                <span class="todo-done">마라톤</span>
-                <button>delete</button>
-                <button disabled>edit</button>
-              </li>
-              <li>
-                <input type="checkbox" class="" checked />
-                <span>다이빙</span>
-                <button>delete</button>
-                <button>edit</button>
+                <button>edit</button>-->
               </li>
             </ul>
           </div>
@@ -98,6 +76,7 @@
         </div>
       </div>
     </div>
+    <!-- TODO INPUT ------------------------------------------------------------ -->
     <div class="todo-wrap">
       <h2>TODOLIST</h2>
       <div class="todo-main">
@@ -111,9 +90,10 @@
                   id="add-input"
                   class="todo-input"
                   maxlength="30"
+{#                  onkeyup="if(Event.keyCode === 13){ alert('t'); }"#}
                   placeholder="Enter Your To-do"
                 />
-                <button class="todo-enter">Enter</button>
+                <button class="todo-enter" onclick="todoWriteAction()">Enter</button>
                 <div class="alert-box">
                   <!-- TODO 10개 이상 들어가면 경고 메시지 -->
                   <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
@@ -125,12 +105,8 @@
         <section class="todo-section02">
           <div class="todo-list-box">
             <ul class="todo-list-ul">
-              <li><a href="#" class="todo-done">눕기</a></li>
-              <li><a href="#">러닝</a></li>
-              <li><a href="#" class="todo-done">고기먹기</a></li>
-              <li><a href="#">번지점프</a></li>
-              <li><a href="#" class="todo-done">마라톤</a></li>
-              <li><a href="#">다이빙</a></li>
+              <!--<li><a href="#" class="todo-done todo-list-a">눕기</a></li>
+              <li><a href="#" class="todo-list-a">러닝</a></li>-->
             </ul>
           </div>
         </section>
