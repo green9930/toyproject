@@ -9,8 +9,8 @@ $(document).ready(() => {
   test();
   // 배경화면 호출
   backgroundInit();
-  // 위치정보 확인
-  apiUrlCheck();
+  // 위치정보 호출
+  geoStart();
 });
 
 /* BACKGROUND --------------------------------------------------------------- */
@@ -36,50 +36,31 @@ function backgroundInit() {
 }
 
 /* WEATHER ------------------------------------------------------------------ */
-// 로컬저장소에 "url"이름으로 값이 있는지 확인 // 없으면 위치정보 요구 알럿 실행
-function apiUrlCheck(){
-  const isUrl = localStorage.getItem("url"); // 로컬저장소에서 저장된 좌표 get
-  if(isUrl === null){ // 만약 좌표값이 null(값없음)이면
-    askGeolocation(); // 위치정보 확인 요청 보내기
-  }
-}
-// 위치정보 허용을 물어보는 함수
-function askGeolocation(){
-navigator.geolocation.getCurrentPosition(onGeoSucess, onGeoError); // sucess 시, 첫번째 인수 실행 / error 시, 두번째 인수 실행
-}
-
-// 위도, 경도를 알아 내는 함수
-function onGeoSucess(position) {
+function onGeoSuccess(position){
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
-  console.log("위치정보를 확인하였습니다.");
-  const APIKEY = '5cedb12d7cfe681080f2af92fcdf062c';
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric`;
-  // return url; 음 ? 리턴한 onGeoSucess를 어떻게 불러오지 ?
-  localStorage.setItem("url",url);
-}
-// navigator.geolocation error 시 작동하는 함수
-function onGeoError() {
-  alert('위치정보를 확인할 수 없습니다.');
-}
-function getWeather() {
+  const API_KEY = "5cedb12d7cfe681080f2af92fcdf062c";
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
   $.ajax({
     type: 'GET',
-    url: localStorage.getItem("url"),
+    url: url,
     data: {},
-    success: function (response) {
-      const temp = ['main']['temp'];
-      const city = response['name'];
-      const des = response['weather'][0]['description'];
-      console.log(temp);
+    success: (res) => {
+      const temp = res['main']['temp'];
+      const city = res['name'];
+      const dec = res['weather'][0]['main'];
       $('.weather01').text(temp);
       $('.weather02').text(city);
-      $('.weather03').text(des);
+      $('.weather03').text(dec);
     },
   });
 }
-getWeather();
-
+function onGeoError(){
+  alert("위치 정보를 받을 수 없습니다.")
+}
+function geoStart(){
+navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+}
 /* CLOCK -------------------------------------------------------------------- */
 // 우선 html에서 Element를 자바스크립트로 가져온다.
 const clock = document.querySelector('.clock'); // class는 .을 찍어야한다.
@@ -126,7 +107,7 @@ const dbTestPost = () => {
   $.ajax({
     type: 'POST',
     url: '/dbtest',
-    data: { text_give: text },
+    data: {text_give: text},
     success: (res) => {
       alert(res['msg']);
     },
