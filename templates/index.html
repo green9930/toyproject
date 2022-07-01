@@ -36,7 +36,6 @@
       <span class="weather02"></span>
       <span class="weather03"></span>
     </div>
-
     <!-- CLOCK ----------------------------------------------------------------- -->
     <h2>CLOCK</h2>
     <span class="clock">00:00</span>
@@ -53,18 +52,6 @@
                 <button class='todo-delete-btn'>delete</button>
                 <button class='todo-edit-btn' disabled>edit</button>
               </li> -->
-              <!-- <li>
-                <input type="checkbox" class="" checked />
-                <span>러닝</span>
-                <button>delete</button>
-                <button class='todo-edit-btn'>edit</button>
-              </li> -->
-              <!-- <li>
-                <input type="checkbox" class="" />
-                <span class="todo-done">고기먹기</span>
-                <button>delete</button>
-                <button class='todo-edit-btn' disabled>edit</button>
-              </li> -->
             </ul>
           </div>
           <div class="todo-editor">
@@ -77,8 +64,6 @@
               placeholder=""
             />
             <button class="modify-btn">edit</button>
-            <!-- 수정/삭제 목적 글번호 넣는 input -->
-            <input type="hidden" class="modify-num" />
           </div>
         </div>
       </div>
@@ -106,7 +91,7 @@
                   Enter
                 </button>
                 <div class="alert-box">
-                  <!-- TODO 10개 이상 들어가면 경고 메시지 -->
+                  <!-- TODO 10개 이상 등록 시 경고 메시지 -->
                   <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
                 </div>
               </div>
@@ -116,9 +101,7 @@
         <section class="todo-section02">
           <div class="todo-list-box">
             <ul class="todo-list-ul">
-              <!-- <li><a href="#" class="todo-done todo-list-a">눕기</a></li> -->
-              <!-- <li><a href="#" class="todo-list-a">러닝</a></li> -->
-              <!-- <li><a href="#" class="todo-done todo-list-a">고기먹기</a></li> -->
+              <!-- <li><a href="#" class="todo-done todo-list-a">TODO</a></li> -->
             </ul>
           </div>
         </section>
@@ -126,18 +109,25 @@
     </div>
     <!-- QUOTE ----------------------------------------------------------------- -->
     <div class="wrap">
-
-        <span id="quote" class="quote"></span>
-
-        <span id="buttons" class="buttons">
-            <input onclick="count('plus')" id="like_button" type="button" class="btn btn-outline-primary" value="Like 👍">
-            <input onclick="count('minus')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">
-        </span>
-
-        <div class="like_number" id="like_number">  </div>
-        <div class="dislike_number" id="dislike_number"></div>
-
+      <span id="quote" class="quote"></span>
+      <span id="buttons" class="buttons">
+        <input
+          onclick="count('plus')"
+          id="like_button"
+          type="button"
+          class="btn btn-outline-primary"
+          value="Like 👍"
+        />
+        <input
+          onclick="count('minus')"
+          id="dislike_button"
+          type="button"
+          class="btn btn-outline-danger"
+          value="Dislike 👎"
+        />
+      </span>
+      <div class="like_number" id="like_number"></div>
+      <div class="dislike_number" id="dislike_number"></div>
     </div>
-
   </body>
 </html>

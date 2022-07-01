@@ -1,4 +1,3 @@
-import requests
 from flask import Flask, render_template, request, jsonify
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
@@ -91,11 +90,14 @@ def delete_todo():
     return jsonify({'message': 'SUCCESS: DELETE TODO'})
 
 # QUOTE ---------------------------------------------------------------------- #
+
+
 @app.route("/quote", methods=["GET"])
 def quote_get():
     quote_list = list(db.quote.find({}, {'_id': False}))
     print(quote_list)
     return jsonify({'quotes': quote_list})
+
 
 @app.route("/quote", methods=["POST"])
 def quote_post():
@@ -103,20 +105,39 @@ def quote_post():
     dislike_receive = request.form['dislike_give']
     written_receive = request.form['written_give']
 
-    db.quote.update_one({'quote': written_receive}, {'$set': {'like': like_receive, 'dislike': dislike_receive}})
+    db.quote.update_one({'quote': written_receive}, {
+                        '$set': {'like': like_receive, 'dislike': dislike_receive}})
     return jsonify({'msg': 'MongoDB Update 완료 ❕'})
 
 
-# DB TEST -------------------------------------------------------------------- #
-@app.route('/dbtest', methods=['POST'])
-def dbtest_post():
+# QUOTE POST ----------------------------------------------------------------- #
+
+@app.route("/quote/post", methods=["POST"])
+def qoute_post_text():
     text_receive = request.form['text_give']
+    quote_like = request.form['like']
+    quote_dislike = request.form['dislike']
 
     doc = {
-        'text': text_receive,
+        'quote': text_receive,
+        'like': quote_like,
+        'dislike': quote_dislike,
     }
-    db.testdb.insert_one(doc)
-    return jsonify({'msg': 'MONGODB TEST SUCCESS'})
+
+    db.quote.insert_one(doc)
+    return jsonify({'msg': 'QUOTE UPDATE'})
+
+
+# DB TEST -------------------------------------------------------------------- #
+# @app.route('/dbtest', methods=['POST'])
+# def dbtest_post():
+#     text_receive = request.form['text_give']
+
+#     doc = {
+#         'text': text_receive,
+#     }
+#     db.testdb.insert_one(doc)
+#     return jsonify({'msg': 'MONGODB TEST SUCCESS'})
 
 
 if __name__ == '__main__':

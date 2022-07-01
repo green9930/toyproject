@@ -13,6 +13,8 @@ $(document).ready(() => {
   geoStart();
   // TODOLIST 호출
   getTodo(true);
+  // QUOTE 호출
+  show_quote();
 });
 
 /* BACKGROUND --------------------------------------------------------------- */
@@ -75,6 +77,7 @@ function getClock() {
   const date = new Date();
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
+
   clock.innerText = `${hours}:${minutes}`;
 }
 
@@ -86,18 +89,13 @@ const $todoInput = document.querySelector('.todo-input');
 const $todoAddBtn = document.querySelector('.todo-enter');
 
 /* TODO POPUP --------------------------------------------------------------- */
-// 팝업열기
-// $(document).on('click','클래스이름/아이디이름',function(){})
+/* OPEN POPUP --------------------------------------------------------------- */
 $(document).on('click', '.todo-list-a', function (e) {
   e.preventDefault();
   const targetTimestamp = e.currentTarget.nextElementSibling.innerText;
   const targetText = e.target.innerText;
-  // e.target.classList = object
   const arr = [...e.target.classList];
   const isTodoDone = arr.includes('todo-done');
-  console.log(targetTimestamp);
-  console.log(targetText);
-  console.log(isTodoDone);
 
   if (isTodoDone) {
     $('#edit-input').attr('disabled', true);
@@ -115,7 +113,7 @@ $(document).on('click', '.todo-list-a', function (e) {
   getTodo(false);
 });
 
-// 팝업닫기
+/* CLOSE POPUP -------------------------------------------------------------- */
 $(document).on('click', '.todo-pop-container', function (e) {
   if (e.target === e.currentTarget) {
     $('.todo-pop').css('visibility', 'hidden');
@@ -130,7 +128,6 @@ const getTodo = (isMain) => {
     data: {},
     success: (res) => {
       const data = res['todolist'];
-      console.log(data);
       $todoInput.value = '';
 
       // TODO LIST 최대 등록 개수 체크
@@ -151,7 +148,6 @@ const getTodo = (isMain) => {
       if (isMain) {
         printMainTodo(data);
       } else {
-        // 팝업창을 띄워도 메인화면 보여야 함 (backdrop 반투명)
         printMainTodo(data);
         printPopupTodo(data);
       }
@@ -164,7 +160,6 @@ const printPopupTodo = (data) => {
   $('.todo-popup-list').empty();
 
   data.map((item) => {
-    // isDone 값이 boolean이 아니라 string으로 넘어옴
     const { todo, isDone, timestamp } = item;
     let todo_popup_html;
     if (isDone === 'false') {
@@ -275,7 +270,7 @@ const handleToggleTodo = (targetIsDone, targetTimestamp) => {
 /* EDIT TODO ---------------------------------------------------------------- */
 const handleEditTodo = (targetTimestamp) => {
   const editTodoItem = $('#edit-input').val();
-  // console.log(editTodoItem);
+
   if ($.trim(editTodoItem) === '') {
     $('#edit-input').focus();
     alert('Please enter your todo first.');
@@ -321,6 +316,7 @@ $(document).on('click', '.todo-edit-btn', (e) => {
 $(document).on('click', '.todo-delete-btn', (e) => {
   const targetTimestamp = e.target.parentElement.children[2].innerText;
   const confirmDelete = confirm(`Are you sure you want to delete this todo?`);
+
   confirmDelete && handleDeleteTodo(targetTimestamp);
 });
 
@@ -339,18 +335,15 @@ const handleDeleteTodo = (targetTimestamp) => {
 };
 
 /* QUOTE -------------------------------------------------------------------- */
-$(document).ready(function () {
-  show_quote();
 
-  $('#like_button').click(function () {
-    $(this).prop('disabled', true);
-    $(this).css('cursor', 'not-allowed');
-  });
+$('#like_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
+});
 
-  $('#dislike_button').click(function () {
-    $(this).prop('disabled', true);
-    $(this).css('cursor', 'not-allowed');
-  });
+$('#dislike_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
 });
 
 function show_quote() {
@@ -416,14 +409,28 @@ function count(type) {
 }
 
 /* DB TEST ------------------------------------------------------------------ */
+// const dbTestPost = () => {
+//   // input 입력 내용
+//   let text = $('.dbtest-input').val();
+//   console.log(text);
+//   $.ajax({
+//     type: 'POST',
+//     url: '/dbtest',
+//     data: { text_give: text },
+//     success: (res) => {
+//       alert(res['msg']);
+//     },
+//   });
+// };
+
 const dbTestPost = () => {
   // input 입력 내용
   let text = $('.dbtest-input').val();
   console.log(text);
   $.ajax({
     type: 'POST',
-    url: '/dbtest',
-    data: { text_give: text },
+    url: '/quote/post',
+    data: { text_give: text, like: 0, dislike: 0 },
     success: (res) => {
       alert(res['msg']);
     },
