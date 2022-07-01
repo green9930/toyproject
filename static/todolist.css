@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   z-index: 100;
-  visibility: visible;
+  visibility: hidden;
 }
 
 .todo-pop .todo-pop-container {
