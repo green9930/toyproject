@@ -7,6 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="김미리, 김원호, 두성한, 배근아, 신필재" />
     <meta name="description" content="항해99 토이 프로젝트 - Momentum" />
+    <!-- FONT ------------------------------------------------------------------ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
     <!-- CSS ------------------------------------------------------------------- -->
     <link rel="stylesheet" href="../static/style.css" />
     <!-- JQEURY ---------------------------------------------------------------- -->
@@ -45,22 +52,14 @@
       <div class="todo-pop-container">
         <div class="todo-content-box">
           <div class="todo-content-list">
-
-            <ul class="todo-popup-list">
-              <!-- <li>
-                <input type="checkbox" class="" />
-                <span class="todo-done">눕기</span>
-                <button class='todo-delete-btn'>delete</button>
-                <button class='todo-edit-btn' disabled>edit</button>
-              </li> -->
-            </ul>
+            <ul class="todo-popup-list"></ul>
           </div>
           <div class="todo-editor">
             <label for="edit-input">todo editor</label>
             <input
               type="text"
               id="edit-input"
-              maxlength="30"
+              maxlength="16"
               required
               placeholder=""
             />
@@ -75,36 +74,30 @@
       <div class="todo-main">
         <section class="todo-section01">
           <div class="todo-input-container">
-            <div class="todo-input-box">
-              <div class="todo-div">
-                <label for="add-input">What is your main focus for today?</label>
+            <div class="todo-div">
+              <label for="add-input">What is your main focus for today?</label>
+              <div class="todo-input-box">
                 <input
                   type="text"
                   id="add-input"
                   class="todo-input"
-                  maxlength="30"
-{#                  onkeyup="if(Event.keyCode === 13){ alert('t'); }"#}
+                  maxlength="16"
                   placeholder="Enter Your To-do"
                   onkeyup="if(window.event.keyCode===13){handleAddTodo()}"
                 />
-
                 <button class="todo-enter" onclick="handleAddTodo()">
                   Enter
                 </button>
-                <div class="alert-box">
-                  <!-- TODO 10개 이상 등록 시 경고 메시지 -->
-                  <!-- <span>오늘 할 일은 최대 10개까지 등록할 수 있습니다😊</span> -->
-                </div>
+              </div>
+              <div class="alert-box">
+                <!-- TODO 10개 이상 등록 시 경고 메시지 -->
               </div>
             </div>
           </div>
         </section>
         <section class="todo-section02">
           <div class="todo-list-box">
-            <ul class="todo-list-ul">
-
-              <!-- <li><a href="#" class="todo-done todo-list-a">TODO</a></li> -->
-            </ul>
+            <ul class="todo-list-ul"></ul>
           </div>
         </section>
       </div>

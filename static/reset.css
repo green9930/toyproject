@@ -24,6 +24,7 @@ body *::after {
 body {
   /* font-family: 'Spoqa Han Sans', 'Sans-serif'; ----------------------------- */
   font-size: 1.6rem;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   background-color: #fff;
   color: #181818;
@@ -95,6 +96,17 @@ td {
 th,
 td {
   display: inline;
+}
+
+input 자동완성 background 없애기 input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* 커스터마이징 ------------------------------------------------------------------- */

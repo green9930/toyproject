@@ -91,11 +91,11 @@ const $todoAddBtn = document.querySelector('.todo-enter');
 
 /* TODO POPUP --------------------------------------------------------------- */
 /* OPEN POPUP --------------------------------------------------------------- */
-$(document).on('click', '.todo-list-a', function (e) {
+$(document).on('click', '.todo-list-item', function (e) {
   e.preventDefault();
-  const targetTimestamp = e.currentTarget.nextElementSibling.innerText;
-  const targetText = e.target.innerText;
-  const arr = [...e.target.classList];
+  const targetText = e.currentTarget.children[0].innerText;
+  const targetTimestamp = e.currentTarget.children[1].innerText;
+  const arr = [...e.currentTarget.children[0].classList];
   const isTodoDone = arr.includes('todo-done');
 
   if (isTodoDone) {
@@ -194,12 +194,12 @@ const printMainTodo = (data) => {
     const { todo, isDone, timestamp } = item;
     let todo_html;
     if (isDone === 'false') {
-      todo_html = `<li>
+      todo_html = `<li class='todo-list-item'>
                      <a href="#" class="todo-list-a">${todo}</a>
                      <span class="a11y-hidden">${timestamp}</span>
                    </li>`;
     } else if (isDone === 'true') {
-      todo_html = `<li>
+      todo_html = `<li class='todo-list-item'>
                      <a href="#" class="todo-done todo-list-a">${todo}</a>
                      <span class="a11y-hidden">${timestamp}</span>
                    </li>`;
