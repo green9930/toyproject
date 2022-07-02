@@ -20,15 +20,10 @@ db = client.toyprojectdb
 def home():
     return render_template('index.html')
 
-# BACKGROUND ----------------------------------------------------------------- #
-
-
-# WEATHER -------------------------------------------------------------------- #
-
-
 # TODOLIST ------------------------------------------------------------------- #
 
 # READ TODO ------------------------------------------------------------------ #
+
 
 @app.route('/todolist', methods=['GET'])
 def read_todo():
@@ -91,50 +86,7 @@ def delete_todo():
 
     return jsonify({'message': 'SUCCESS: DELETE TODO'})
 
-#====================================================================todo-list 글 가져옴
-@app.route("/getTodoList", methods=["GET"])
-def getTodoList():
-    all_todo = list(db.todo.find({},{'_id':False}))
-    print(all_todo)
-    return jsonify({'msg': all_todo})
 
-#======================================================================todo-list 글 수정
-@app.route("/todoModify", methods=["POST"])
-def todoModify():
-    data_receive = request.form['modiData']
-    num_receive = request.form['modiNum']
-    doc = {
-        'todo':data_receive,
-        'num':num_receive
-    }
-    print(data_receive, num_receive)
-    db.todo.update_one({'num':num_receive},{'$set':{'todo':data_receive}})
-    return jsonify({'msg': '완료!'})
-
-#======================================================================todo-list 글 지움
-@app.route("/deleteAction", methods=["POST"])
-def deleteAction():
-    num_receive = request.form['todoNum']
-    print('잉')
-    print(num_receive)
-    doc = {
-        'num':num_receive
-    }
-    print(doc)
-    db.todo.delete_one(doc)
-    return jsonify({'msg': '완료!'})
-
-# ===========================================================================todo실행여부
-@app.route("/todoDoneAction", methods=["POST"])
-def todoDoneAction():
-    num_receive = request.form['doneNum']
-    done_receive = int(request.form['doneFT'])
-    doc = {
-        'num':num_receive
-    }
-    print(doc)
-    db.todo.update_one({"num":num_receive},{'$set':{'done':done_receive}})
-    return jsonify({'msg': '완료!'})
 # QUOTE ---------------------------------------------------------------------- #
 
 
@@ -143,7 +95,6 @@ def quote_get():
     quote_list = list(db.quote.find({}, {'_id': False}))
     print(quote_list)
     return jsonify({'quotes': quote_list})
-
 
 @app.route("/quote", methods=["POST"])
 def quote_post():
@@ -156,24 +107,6 @@ def quote_post():
     return jsonify({'msg': 'MongoDB Update 완료 ❕'})
 
 
-# QUOTE POST ----------------------------------------------------------------- #
-
-@app.route("/quote/post", methods=["POST"])
-def qoute_post_text():
-    text_receive = request.form['text_give']
-    quote_like = request.form['like']
-    quote_dislike = request.form['dislike']
-
-    doc = {
-        'quote': text_receive,
-        'like': quote_like,
-        'dislike': quote_dislike,
-    }
-
-    db.quote.insert_one(doc)
-    return jsonify({'msg': 'QUOTE UPDATE'})
-
-
 # DB TEST -------------------------------------------------------------------- #
 # @app.route('/dbtest', methods=['POST'])
 # def dbtest_post():
@@ -184,7 +117,6 @@ def qoute_post_text():
 #     }
 #     db.testdb.insert_one(doc)
 #     return jsonify({'msg': 'MONGODB TEST SUCCESS'})
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

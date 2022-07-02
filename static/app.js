@@ -1,12 +1,12 @@
 /* JS 연결 확인 ----------------------------------------------------------------- */
-const test = () => {
-  console.log('JavaScript connected!');
-};
+// const test = () => {
+//   console.log('JavaScript connected!');
+// };
 
 /* app.js ------------------------------------------------------------------- */
 $(document).ready(() => {
   // 페이지 로딩 후 바로 들어오는 GET 함수는 이곳에서 호출
-  test();
+  // test();
   // 배경화면 호출
   backgroundInit();
   // 위치정보 호출
@@ -70,8 +70,7 @@ function geoStart() {
 }
 
 /* CLOCK -------------------------------------------------------------------- */
-// 우선 html에서 Element를 자바스크립트로 가져온다.
-const clock = document.querySelector('.clock'); // class는 .을 찍어야한다.
+const clock = document.querySelector('.clock');
 
 function getClock() {
   const date = new Date();
@@ -111,7 +110,6 @@ $(document).on('click', '.todo-list-item', function (e) {
 
   $('.todo-pop').css('visibility', 'visible');
 
-
   getTodo(false);
 });
 
@@ -121,7 +119,6 @@ $(document).on('click', '.todo-pop-container', function (e) {
     $('.todo-pop').css('visibility', 'hidden');
   }
 });
-
 
 /* READ TODO ---------------------------------------------------------------- */
 const getTodo = (isMain) => {
@@ -425,17 +422,3 @@ function count(type) {
 //     },
 //   });
 // };
-
-const dbTestPost = () => {
-  // input 입력 내용
-  let text = $('.dbtest-input').val();
-  console.log(text);
-  $.ajax({
-    type: 'POST',
-    url: '/quote/post',
-    data: { text_give: text, like: 0, dislike: 0 },
-    success: (res) => {
-      alert(res['msg']);
-    },
-  });
-};

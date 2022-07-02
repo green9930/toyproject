@@ -19,6 +19,7 @@
   flex-direction: column;
   align-items: center;
   padding: 40px;
+  border-radius: 7px;
 }
 
 .todo-div label {
@@ -85,6 +86,7 @@
   padding: 5px;
   margin-bottom: 3px;
   font-size: 1.6rem;
+  border-radius: 2px;
   color: #ffffff;
   -moz-transition: color 0.2s ease;
   -o-transition: color 0.2s ease;
@@ -95,7 +97,7 @@
 
 .todo-list-ul li:hover {
   background-color: rgba(255, 255, 255, 0.6);
-  color: #808080;
+  color: #000000;
   cursor: pointer;
 }
 
@@ -126,6 +128,7 @@
   background-color: #fff;
   opacity: 0.8;
   padding: 50px 0;
+  border-radius: 7px;
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-content-list {
@@ -204,8 +207,13 @@
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-editor input {
+  background-color: transparent;
   width: 250px;
   margin: 0 15px;
+  padding: 5px 5px 3px 5px;
+  border: none;
+  border-bottom: 1px solid #000000;
+  outline: none;
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-editor button {
