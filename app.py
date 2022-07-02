@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import certifi
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -26,6 +27,7 @@ def home():
 
 
 # TODOLIST ------------------------------------------------------------------- #
+
 # READ TODO ------------------------------------------------------------------ #
 
 @app.route('/todolist', methods=['GET'])
@@ -89,6 +91,50 @@ def delete_todo():
 
     return jsonify({'message': 'SUCCESS: DELETE TODO'})
 
+#====================================================================todo-list 글 가져옴
+@app.route("/getTodoList", methods=["GET"])
+def getTodoList():
+    all_todo = list(db.todo.find({},{'_id':False}))
+    print(all_todo)
+    return jsonify({'msg': all_todo})
+
+#======================================================================todo-list 글 수정
+@app.route("/todoModify", methods=["POST"])
+def todoModify():
+    data_receive = request.form['modiData']
+    num_receive = request.form['modiNum']
+    doc = {
+        'todo':data_receive,
+        'num':num_receive
+    }
+    print(data_receive, num_receive)
+    db.todo.update_one({'num':num_receive},{'$set':{'todo':data_receive}})
+    return jsonify({'msg': '완료!'})
+
+#======================================================================todo-list 글 지움
+@app.route("/deleteAction", methods=["POST"])
+def deleteAction():
+    num_receive = request.form['todoNum']
+    print('잉')
+    print(num_receive)
+    doc = {
+        'num':num_receive
+    }
+    print(doc)
+    db.todo.delete_one(doc)
+    return jsonify({'msg': '완료!'})
+
+# ===========================================================================todo실행여부
+@app.route("/todoDoneAction", methods=["POST"])
+def todoDoneAction():
+    num_receive = request.form['doneNum']
+    done_receive = int(request.form['doneFT'])
+    doc = {
+        'num':num_receive
+    }
+    print(doc)
+    db.todo.update_one({"num":num_receive},{'$set':{'done':done_receive}})
+    return jsonify({'msg': '완료!'})
 # QUOTE ---------------------------------------------------------------------- #
 
 

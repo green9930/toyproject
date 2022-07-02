@@ -1,3 +1,4 @@
+.todo-done-text{text-decoration:line-through;}
 .todo-pop {
   width: 100%;
   height: 100%;
@@ -9,6 +10,7 @@
 }
 
 .todo-pop .todo-pop-container {
+  background-color:rgba(0,0,0,0.2);
   width: 100%;
   height: 100%;
   display: flex;
@@ -33,24 +35,33 @@
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-content-list ul {
-  width: 800px;
-  background-color: pink;
+  width: 700px;
   text-align: center;
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li {
   width: 100%;
+  border-bottom:1px solid rgba(0,0,0,0.2);
 }
+.todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li input{margin:0 25px;}
 
 .todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li span {
-  margin-right: 15px;
-  cursor: pointer;
   display: inline-block;
+  width: 300px;
+  margin:0 50px;
+  font:18px/50px 'Arial','sans-serif';
 }
 
-.todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li a {
-  display: inline-block;
-  width: 250px;
+.todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li button:nth-of-type(1) {
+  background-color:transparent;
+  padding:15px 25px;
+  margin:0;
+}
+
+.todo-pop .todo-pop-container .todo-content-box .todo-content-list ul li button:nth-of-type(2) {
+  background-color:transparent;
+  padding:15px 25px;
+  margin:0;
 }
 
 .todo-pop
@@ -59,29 +70,34 @@
   .todo-content-list
   ul
   li
-  a.todo-done-text {
+  span.todo-done-text {
   text-decoration: line-through;
-}
-
-.todo-pop
-  .todo-pop-container
-  .todo-content-box
-  .todo-content-list
-  ul
-  li
-  button:nth-of-type(1) {
-  margin-right: 15px;
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-editor {
   width: 100%;
   margin: 50px auto 0;
   text-align: center;
+  background-color:rgba(0,0,0,0.2);
+  line-height:50px;
 }
 
 .todo-pop .todo-pop-container .todo-content-box .todo-editor label {
   margin-right: 15px;
+  text-transform: uppercase;
+  letter-spacing:1.5px;
 }
+
+.todo-pop .todo-pop-container .todo-content-box .todo-editor input {
+  width:250px;
+  margin:0 15px;
+}
+
+.todo-pop .todo-pop-container .todo-content-box .todo-editor button {
+  padding:0 15px;
+  background-color:transparent;
+}
+
 
 .todo-done {
   text-decoration: line-through;

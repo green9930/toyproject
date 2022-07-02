@@ -85,6 +85,7 @@ getClock();
 setInterval(getClock, 1000);
 
 /* TODOLIST ----------------------------------------------------------------- */
+
 const $todoInput = document.querySelector('.todo-input');
 const $todoAddBtn = document.querySelector('.todo-enter');
 
@@ -110,6 +111,7 @@ $(document).on('click', '.todo-list-a', function (e) {
 
   $('.todo-pop').css('visibility', 'visible');
 
+
   getTodo(false);
 });
 
@@ -119,6 +121,7 @@ $(document).on('click', '.todo-pop-container', function (e) {
     $('.todo-pop').css('visibility', 'hidden');
   }
 });
+
 
 /* READ TODO ---------------------------------------------------------------- */
 const getTodo = (isMain) => {
