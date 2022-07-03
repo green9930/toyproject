@@ -94,7 +94,8 @@ def delete_todo():
 
 @app.route("/quote", methods=["GET"])
 def quote_get():
-    quote_list = list(db.quote.find({}, {'_id': False}))
+    quote_list = list(db.quote.find({'dislike': {'$gt': -5}}, {'_id': False}))
+    print(len(quote_list))
     print(quote_list)
     return jsonify({'quotes': quote_list})
 
@@ -106,7 +107,7 @@ def quote_post():
     written_receive = request.form['written_give']
 
     db.quote.update_one({'quote': written_receive}, {
-                        '$set': {'like': like_receive, 'dislike': dislike_receive}})
+                        '$set': {'like': int(like_receive), 'dislike': int(dislike_receive)}})
     return jsonify({'msg': 'MongoDB Update 완료 ❕'})
 
 

@@ -21,5 +21,14 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-top: 700px;
+
+  padding-top: 850px;
 }
+
+/*.like_number {*/
+/*    color: transparent;*/
+/*}*/
+
+/*.dislike_number {*/
+/*    color: transparent;*/
+/*}*/
