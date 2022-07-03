@@ -336,32 +336,42 @@ const handleDeleteTodo = (targetTimestamp) => {
 
 /* QUOTE -------------------------------------------------------------------- */
 
-$('#like_button').click(function () {
-  $(this).prop('disabled', true);
-  $(this).css('cursor', 'not-allowed');
-});
-
-$('#dislike_button').click(function () {
-  $(this).prop('disabled', true);
-  $(this).css('cursor', 'not-allowed');
-});
+// $('#like_button').click(function () {
+//   $(this).prop('disabled', true);
+//   $(this).css('cursor', 'not-allowed');
+//   $('#dislike_button').prop('disabled', true);
+//   $('#dislike_button').css('cursor', 'not-allowed');
+// });
+//
+// $('#dislike_button').click(function () {
+//   $(this).prop('disabled', true);
+//   $(this).css('cursor', 'not-allowed');
+//   $('#like_button').prop('disabled', true);
+//   $('#like_button').css('cursor', 'not-allowed');
+// });
 
 function show_quote() {
+
   $.ajax({
     type: 'GET',
     url: '/quote',
     data: {},
     success: function (response) {
-      let chosen = response['quotes'][Math.floor(Math.random() * 10)];
+      $('#quote').empty();
+      $('#like_number').empty();
+      $('#dislike_number').empty();
+
+      let quoteLen = response['quotes'].length
+
+      let chosen = response['quotes'][Math.floor(Math.random() * quoteLen)];
       let quote = chosen['quote'];
       let like = chosen['like'];
       let dislike = chosen['dislike'];
 
-      $('#quote').append(quote);
-      $('#like_number').append(like);
-      $('#dislike_number').append(dislike);
-      console.log(quote, like, dislike);
-    },
+        $('#quote').append(quote);
+        $('#like_number').append(like);
+        $('#dislike_number').append(dislike);
+    }
   });
 }
 
@@ -379,24 +389,12 @@ function count(type) {
     number = parseInt(number) + 1;
     resultElement.innerText = number;
     alert('투표 완료 ❕');
-
-    // $('#like_button').hide()
-    // let disabled_like_button = `<input onclick="count('disabled')" id="disabled_like_button" type="button" class="btn btn-outline-primary" value="Like 👍">`
-    // $('#buttons').prepend(disabled_like_button)
   } else if (type === 'minus') {
     number2 = parseInt(number2) - 1;
     result2Element.innerText = number2;
     alert('투표 완료 ❕');
-
-    // $('#dislike_button').hide()
-    // let disabled_dislike_button = `<input onclick="count('disabled')" id="dislike_button" type="button" class="btn btn-outline-danger" value="Dislike 👎">`
-    // $('#buttons').append(disabled_dislike_button)
   }
-  //else if (type === 'disabled') {
-  //     alert('중복 투표는 불가능 합니다.. 😓')
-  // }
 
-  //*button disabled
 
   $.ajax({
     type: 'POST',
@@ -404,6 +402,7 @@ function count(type) {
     data: { like_give: number, dislike_give: number2, written_give: written },
     success: function (response) {
       console.log(response['msg']);
+      show_quote();
     },
   });
 }
