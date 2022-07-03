@@ -29,6 +29,16 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: center;
-  padding-top: 43%;
-  padding-left: 3%;
+  /*padding-top: 43%;
+  padding-left: 3%; */
+  padding-top: 850px;
 }
+
+/*.like_number {*/
+/*    color: transparent;*/
+/*}*/
+
+/*.dislike_number {*/
+/*    color: transparent;*/
+/*}*/
+
