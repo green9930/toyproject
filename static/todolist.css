@@ -20,6 +20,9 @@
   align-items: center;
   padding: 40px;
   border-radius: 7px;
+  position: absolute;
+  left: 37.5%;
+  top: 47%;
 }
 
 .todo-div label {
@@ -156,6 +159,7 @@
   width: 300px;
   margin: 0 50px;
   font: 18px/50px 'Arial', 'sans-serif';
+  color: black;
 }
 
 .todo-pop

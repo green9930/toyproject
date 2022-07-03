@@ -4,7 +4,15 @@
 
 .quote {
   font-weight: bold;
-  font-size: 30px;
+  font-size: 2rem;
+  height: 10px;
+  width: auto;
+  padding-bottom: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: content-box;
 }
 
 .buttons {
@@ -19,9 +27,10 @@
 .wrap {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-
+  /*padding-top: 43%;
+  padding-left: 3%; */
   padding-top: 850px;
 }
 
@@ -32,3 +41,4 @@
 /*.dislike_number {*/
 /*    color: transparent;*/
 /*}*/
+

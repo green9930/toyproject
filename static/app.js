@@ -51,12 +51,12 @@ function onGeoSuccess(position) {
     url: url,
     data: {},
     success: (res) => {
-      const temp = res['main']['temp'];
+      const temp = Math.floor(res['main']['temp']);
       const city = res['name'];
       const dec = res['weather'][0]['main'];
-      $('.weather01').text(temp);
-      $('.weather02').text(city);
-      $('.weather03').text(dec);
+      $('.weather01').text(dec);
+      $('.weather02').text(temp);
+      $('.weather03').text(city);
     },
   });
 }
