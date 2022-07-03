@@ -14,21 +14,18 @@ body *::after {
   box-sizing: border-box;
 }
 
-/* 탭 하이라이트 색상, 터치를 위해 색상을 줌 */
-/* body * {
-  -webkit-tap-highlight-color: rgba(255, 255, 200, 0.3);
-  tap-highlight-color: rgba(255, 255, 200, 0.3);
-} */
-
 /* 본문 기본 폰트, 글자 크기, 굵기, 배경 색상 지정 */
 body {
-  /* font-family: 'Spoqa Han Sans', 'Sans-serif'; ----------------------------- */
   font-size: 1.6rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   background-color: #fff;
   color: white;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* a 요소 내 이미지에 발생하는 갭 제거, 블록안에 인라인 요소를 줬을 경우 갭을 위한 코드 */
@@ -98,7 +95,7 @@ td {
   display: inline;
 }
 
-input 자동완성 background 없애기 input:-webkit-autofill {
+input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px transparent inset;
 }
 input:-webkit-autofill,

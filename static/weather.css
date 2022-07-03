@@ -1,18 +1,24 @@
-.weather{
-    text-align: right;
-    vertical-align: top;
+.weather {
+  text-align: right;
+  vertical-align: top;
+  padding: 5px 10px 0 0;
+  position: fixed;
+  top: 0;
+  right: 0;
 }
 
-.weather02{
-    font-size: 5rem;
+.weather02 {
+  font-size: 5rem;
 }
-.weather-degree{
-    font-size: 5rem;
- }
 
-.weather01{
-    font-size: 3.5rem;
+.weather-degree {
+  font-size: 5rem;
 }
-.weather03{
-    font-size: 2.5rem;
+
+.weather01 {
+  font-size: 3.5rem;
+}
+
+.weather03 {
+  font-size: 2.5rem;
 }

@@ -20,36 +20,60 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- JAVASCRIPT ------------------------------------------------------------ -->
     <script defer src="../static/app.js"></script>
-    <link rel="stylesheet" href="../static/quote.css">
   </head>
   <body>
-    <!-- DB TEST --------------------------------------------------------------- -->
-    <!-- <div>
-      <div>
-        <input class="dbtest-input" type="text" />
-        <button class="dbtest-btn" type="submit" onclick="dbTestPost()">
-          SUBMIT
-        </button>
-      </div>
-      <div class="dbtest-list">
-        <span class="dbtest-text">DB TEST 텍스트 확인</span>
-      </div>
-    </div> -->
     <h1 class="a11y-hidden">Momentum</h1>
     <!-- BACKGROUND ------------------------------------------------------------ -->
     <h2 class="a11y-hidden">BACKGROUND</h2>
     <!-- WEATHER --------------------------------------------------------------- -->
-        <div class="weather">
-            <span class="weather01"></span>
-            <span class="weather02"></span>
-            <span class="weather-degree">°</span><br>
-            <span class="weather03"></span>
-        </div>
+    <div class="weather">
+      <span class="weather01"></span>
+      <span class="weather02"></span>
+      <span class="weather-degree">°</span><br />
+      <span class="weather03"></span>
     </div>
-    <!-- CLOCK ----------------------------------------------------------------- -->
-    <h2 class="a11y-hidden">CLOCK</h2>
-    <span class="clock">00:00</span>
-    <!-- TODOLIST -------------------------------------------------------------- -->
+    <div class="clock-todo-wrapper">
+      <!-- CLOCK ----------------------------------------------------------------- -->
+      <h2 class="a11y-hidden">CLOCK</h2>
+      <span class="clock">00:00</span>
+      <!-- TODOLIST -------------------------------------------------------------- -->
+      <!-- TODO INPUT ------------------------------------------------------------ -->
+      <div class="todo-wrap">
+        <h2 class="a11y-hidden">TODOLIST</h2>
+        <div class="todo-main">
+          <section class="todo-section01">
+            <div class="todo-input-container">
+              <div class="todo-div">
+                <label for="add-input"
+                  >What is your main focus for today?</label
+                >
+                <div class="todo-input-box">
+                  <input
+                    type="text"
+                    id="add-input"
+                    class="todo-input"
+                    maxlength="16"
+                    placeholder="Enter Your To-do"
+                    onkeyup="if(window.event.keyCode===13){handleAddTodo()}"
+                  />
+                  <button class="todo-enter" onclick="handleAddTodo()">
+                    Enter
+                  </button>
+                </div>
+                <div class="alert-box">
+                  <!-- TODO 10개 이상 등록 시 경고 메시지 -->
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="todo-section02">
+            <div class="todo-list-box">
+              <ul class="todo-list-ul"></ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
     <!-- TODO POPUP ------------------------------------------------------------ -->
     <div class="todo-pop">
       <div class="todo-pop-container">
@@ -71,40 +95,6 @@
         </div>
       </div>
     </div>
-    <!-- TODO INPUT ------------------------------------------------------------ -->
-    <div class="todo-wrap">
-      <h2 class="a11y-hidden">TODOLIST</h2>
-      <div class="todo-main">
-        <section class="todo-section01">
-          <div class="todo-input-container">
-            <div class="todo-div">
-              <label for="add-input">What is your main focus for today?</label>
-              <div class="todo-input-box">
-                <input
-                  type="text"
-                  id="add-input"
-                  class="todo-input"
-                  maxlength="16"
-                  placeholder="Enter Your To-do"
-                  onkeyup="if(window.event.keyCode===13){handleAddTodo()}"
-                />
-                <button class="todo-enter" onclick="handleAddTodo()">
-                  Enter
-                </button>
-              </div>
-              <div class="alert-box">
-                <!-- TODO 10개 이상 등록 시 경고 메시지 -->
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="todo-section02">
-          <div class="todo-list-box">
-            <ul class="todo-list-ul"></ul>
-          </div>
-        </section>
-      </div>
-    </div>
     <!-- QUOTE ----------------------------------------------------------------- -->
     <div class="wrap">
       <span id="quote" class="quote"></span>
@@ -113,15 +103,15 @@
           onclick="count('plus')"
           id="like_button"
           type="button"
-          class="btn btn-outline-primary"
-          value="Like 👍"
+          class="btn btn-outline-primary quote-btn"
+          value="Like👍"
         />
         <input
           onclick="count('minus')"
           id="dislike_button"
           type="button"
-          class="btn btn-outline-danger"
-          value="Dislike 👎"
+          class="btn btn-outline-danger quote-btn"
+          value="Dislike👎"
         />
       </span>
       <div class="like_number" id="like_number"></div>

@@ -3,42 +3,73 @@
 }
 
 .quote {
-  font-weight: bold;
-  font-size: 2rem;
-  height: 10px;
-  width: auto;
-  padding-bottom: 2px;
-  display: flex;
+  width: 100%;
+  font-weight: 500;
+  font-size: 2.4rem;
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-sizing: content-box;
 }
 
 .buttons {
+  display: inline-block;
   margin-left: 15px;
-}
-
-.buttons > button {
-  font-weight: bold;
-  font-size: 10px;
+  display: flex;
 }
 
 .wrap {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  /*padding-top: 43%;
-  padding-left: 3%; */
-  padding-top: 850px;
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
 }
 
-/*.like_number {*/
-/*    color: transparent;*/
-/*}*/
+.like_number {
+  color: transparent;
+}
 
-/*.dislike_number {*/
-/*    color: transparent;*/
-/*}*/
+.dislike_number {
+  color: transparent;
+}
 
+.btn-outline-primary {
+  margin-right: 10px;
+}
+
+.quote-btn {
+  width: 90px;
+  background-color: transparent;
+  padding: 10px;
+  border-radius: 50px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  transition: color 0.2s ease;
+}
+
+.quote-btn:disabled {
+  background-color: #555b61;
+  border: 1px solid #555b61;
+}
+
+.quote-btn:disabled:hover,
+.quote-btn:disabled:focus {
+  background-color: #555b61;
+  border: 1px solid #555b61;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: #014cc4;
+  border: 1px solid #014cc4;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus {
+  background-color: #cc0000;
+  border: 1px solid #cc0000;
+}

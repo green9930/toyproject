@@ -1,12 +1,5 @@
-/* JS 연결 확인 ----------------------------------------------------------------- */
-// const test = () => {
-//   console.log('JavaScript connected!');
-// };
-
 /* app.js ------------------------------------------------------------------- */
 $(document).ready(() => {
-  // 페이지 로딩 후 바로 들어오는 GET 함수는 이곳에서 호출
-  // test();
   // 배경화면 호출
   backgroundInit();
   // 위치정보 호출
@@ -130,7 +123,6 @@ const getTodo = (isMain) => {
       const data = res['todolist'];
       $todoInput.value = '';
 
-      // TODO LIST 최대 등록 개수 체크
       if (data.length >= 10) {
         $todoInput.disabled = true;
         $todoAddBtn.disabled = true;
@@ -144,7 +136,6 @@ const getTodo = (isMain) => {
         $('.alert-box').empty();
       }
 
-      // 메인화면 OR 팝업창
       if (isMain) {
         printMainTodo(data);
       } else {
@@ -156,7 +147,6 @@ const getTodo = (isMain) => {
 };
 
 const printPopupTodo = (data) => {
-  // 새로고침 없을 때 중복 호출 방지
   $('.todo-popup-list').empty();
 
   data.map((item) => {
@@ -184,7 +174,6 @@ const printPopupTodo = (data) => {
 };
 
 const printMainTodo = (data) => {
-  // 새로고침 없을 때 중복 호출 방지
   $('.todo-list-ul').empty();
 
   data.map((item) => {
@@ -336,22 +325,21 @@ const handleDeleteTodo = (targetTimestamp) => {
 
 /* QUOTE -------------------------------------------------------------------- */
 
-// $('#like_button').click(function () {
-//   $(this).prop('disabled', true);
-//   $(this).css('cursor', 'not-allowed');
-//   $('#dislike_button').prop('disabled', true);
-//   $('#dislike_button').css('cursor', 'not-allowed');
-// });
-//
-// $('#dislike_button').click(function () {
-//   $(this).prop('disabled', true);
-//   $(this).css('cursor', 'not-allowed');
-//   $('#like_button').prop('disabled', true);
-//   $('#like_button').css('cursor', 'not-allowed');
-// });
+$('#like_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
+  $('#dislike_button').prop('disabled', true);
+  $('#dislike_button').css('cursor', 'not-allowed');
+});
+
+$('#dislike_button').click(function () {
+  $(this).prop('disabled', true);
+  $(this).css('cursor', 'not-allowed');
+  $('#like_button').prop('disabled', true);
+  $('#like_button').css('cursor', 'not-allowed');
+});
 
 function show_quote() {
-
   $.ajax({
     type: 'GET',
     url: '/quote',
@@ -361,17 +349,17 @@ function show_quote() {
       $('#like_number').empty();
       $('#dislike_number').empty();
 
-      let quoteLen = response['quotes'].length
+      let quoteLen = response['quotes'].length;
 
       let chosen = response['quotes'][Math.floor(Math.random() * quoteLen)];
       let quote = chosen['quote'];
       let like = chosen['like'];
       let dislike = chosen['dislike'];
 
-        $('#quote').append(quote);
-        $('#like_number').append(like);
-        $('#dislike_number').append(dislike);
-    }
+      $('#quote').append(quote);
+      $('#like_number').append(like);
+      $('#dislike_number').append(dislike);
+    },
   });
 }
 
@@ -395,29 +383,12 @@ function count(type) {
     alert('투표 완료 ❕');
   }
 
-
   $.ajax({
     type: 'POST',
     url: '/quote',
     data: { like_give: number, dislike_give: number2, written_give: written },
     success: function (response) {
       console.log(response['msg']);
-      show_quote();
     },
   });
 }
-
-/* DB TEST ------------------------------------------------------------------ */
-// const dbTestPost = () => {
-//   // input 입력 내용
-//   let text = $('.dbtest-input').val();
-//   console.log(text);
-//   $.ajax({
-//     type: 'POST',
-//     url: '/dbtest',
-//     data: { text_give: text },
-//     success: (res) => {
-//       alert(res['msg']);
-//     },
-//   });
-// };
