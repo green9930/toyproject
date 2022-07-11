@@ -1,0 +1,37 @@
+@media all and (max-width: 500px) {
+    body,html{width:100%;height:100%;}
+    body{overflow:hidden;}
+    .weather{right:40px;}
+    .weather .weather01{font-size:2.2rem;}
+    .weather .weather02{font-size:3rem;}
+    .weather .weather-degree{font-size:3rem;}
+    .weather .weather03{font-size:1.8rem;}
+
+    .clock-todo-wrapper{margin-top:-80%;}
+    .clock{font-size:10rem;}
+
+    .todo-div{padding:15px;}
+    .todo-div label{text-align:center; font-size:2rem;}
+    .todo-input-box{margin:0;}
+
+    .todo-input, .todo-enter{font-size:1.8rem;}
+
+    .todo-section02{}
+    .todo-section02 .todo-list-box{}
+    .todo-section02 .todo-list-box .todo-list-ul{width:auto;margin:0 20px 100px 0;}
+    .todo-section02 .todo-list-box .todo-list-ul .todo-list-item{font-size:1rem;}
+
+
+
+    .todo-content-box{background-color:pink;}
+
+
+
+
+
+    .wrap{left:auto;bottom:15px;margin:0 auto;}
+    .wrap .quote{font-size:1.5rem;}
+    .wrap .buttons{flex-direction:column; margin:0;}
+    .wrap .buttons input{margin:5px;font-size:1.2rem;width:auto;padding:5px;}
+
+}
